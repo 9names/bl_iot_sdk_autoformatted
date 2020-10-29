@@ -567,7 +567,7 @@ static aos_dirent_t *romfs_readdir(file_t *fp, aos_dir_t *dir) {
       } else {
         while (1) {
           if ((dp->dir_cur_addr >= dp->dir_end_addr) ||
-              (dp->dir_cur_addr >= dp->dir_end_addr)) {
+              (dp->dir_cur_addr < dp->dir_start_addr)) {
             ROMFS_DUBUG("cur_addr = %p\r\n", dp->dir_cur_addr);
             return NULL;
           }

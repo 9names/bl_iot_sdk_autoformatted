@@ -48,6 +48,10 @@ void bl_sys_time_update(uint64_t epoch) {
 int bl_sys_time_get(uint64_t *epoch) {
   int ms_diff;
 
+  if (!epoch) {
+    return -1;
+  }
+
   if (0 == epoch_time) {
     return -1;
   }
@@ -73,6 +77,10 @@ int bl_sys_time_sync_state(uint32_t *xTicksToJump) {
   uint32_t currTickRtc;
   uint32_t deltaTickRtos;
   uint32_t deltaTickRtc;
+
+  if (!xTicksToJump) {
+    return -1;
+  }
 
   if (!sync_init) {
     return -1;

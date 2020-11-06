@@ -89,7 +89,7 @@ void ipc_host_init(struct ipc_host_env_tag *env, struct ipc_host_cb_tag *cb,
          internel_cal_size_tx_desc + internel_cal_size_tx_hdr);
   utils_list_init(&tx_list_bl);
 #if 0
-    
+
 /**
 ***********
  *

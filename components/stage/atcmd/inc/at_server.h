@@ -24,11 +24,11 @@ typedef enum {
 #define ATCMDSEND_MAX_BUFF_SIZE (1024)
 
 #if 0
-// CA 
+// CA
 extern uint8_t *ca;
 extern size_t ca_length;
 
-// cert 
+// cert
 extern uint8_t *cert;
 extern size_t cert_len;
 extern uint8_t *priv_key;

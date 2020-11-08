@@ -125,7 +125,7 @@ int bl_onchiphci_send_2_controller(struct net_buf *buf) {
     net_buf_pull(buf, sizeof(struct bt_hci_cmd_hdr));
 
     switch (opcode) {
-      // Refer to hci_cmd_desc_tab_le, for the ones of which dest_ll is BLE_CTRL
+    // Refer to hci_cmd_desc_tab_le, for the ones of which dest_ll is BLE_CTRL
     case BT_HCI_OP_LE_CONN_UPDATE:
     case BT_HCI_OP_LE_READ_CHAN_MAP:
     case BT_HCI_OP_LE_READ_REMOTE_FEATURES:
@@ -183,11 +183,11 @@ int bl_onchiphci_send_2_controller(struct net_buf *buf) {
 
 #if defined(CONFIG_BTSOONP_PRINT)
     /**************************************************************************
-     *	 Need to subtract size of struct of @bt_hci_acl_hdr, it's 4bytes.
+     *    Need to subtract size of struct of @bt_hci_acl_hdr, it's 4bytes.
      *    the buf's data need to match the HCI package, otherwise ellisys failes
      *to parses the data. Acl format: its total size is 4bytes connection_hanlde
-     *: 12bits Packet Boundary Flag: 2bits Broadcast Flag	:2bits
-     *	 total_length: 2bytes
+     *: 12bits Packet Boundary Flag: 2bits Broadcast Flag :2bits total_length:
+     *2bytes
      *
      ***************************************************************************/
     printf("[btsnoop]:Acl_out_handle =[0x%x],pb_bc_flag =[0x%x],len "
@@ -326,10 +326,10 @@ static void bl_onchiphci_rx_packet_handler(uint8_t pkt_type, uint16_t src_id,
     tbuf_data += 2;
 
     /**************************************************************************
-     *	  Status : 1 byte
-     *	  Num hci command packet: 1byte
+     *     Status : 1 byte
+     *     Num hci command packet: 1byte
      *     OCF: 1byte
-     *	  OGF: 1byte
+     *     OGF: 1byte
      ***************************************************************************/
     printf("[btsnoop]:pkt_type =[0x%x],len =[0x%x],data=[%s]\r\n", pkt_type, 4,
            bt_hex(tbuf_data - 4, 4));
@@ -389,11 +389,11 @@ static void bl_onchiphci_rx_packet_handler(uint8_t pkt_type, uint16_t src_id,
 
 #if defined(CONFIG_BTSOONP_PRINT)
     /**************************************************************************
-     *	 Need to subtract size of struct of @bt_hci_acl_hdr, it's 4bytes.
+     *    Need to subtract size of struct of @bt_hci_acl_hdr, it's 4bytes.
      *    the buf's data need to match the HCI package, otherwise ellisys failes
      *to parses the data. Acl format: its total size is 4bytes connection_hanlde
-     *: 12bits Packet Boundary Flag: 2bits Broadcast Flag	:2bits
-     *	 total_length: 2bytes
+     *: 12bits Packet Boundary Flag: 2bits Broadcast Flag :2bits total_length:
+     *2bytes
      *
      ***************************************************************************/
     printf("[btsnoop]:Acl_in_handle =[0x%x],pb_bc_flag =[0x%x],len "

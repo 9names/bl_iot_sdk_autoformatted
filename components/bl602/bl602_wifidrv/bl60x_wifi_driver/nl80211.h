@@ -68,8 +68,8 @@ enum nl80211_bss_select_attr {
  * @__NL80211_AUTHTYPE_NUM: internal
  * @NL80211_AUTHTYPE_MAX: maximum valid auth algorithm
  * @NL80211_AUTHTYPE_AUTOMATIC: determine automatically (if necessary by
- *	trying multiple times); this is invalid in netlink -- leave out
- *	the attribute for this on CONNECT commands.
+ *  trying multiple times); this is invalid in netlink -- leave out
+ *  the attribute for this on CONNECT commands.
  */
 enum nl80211_auth_type {
   NL80211_AUTHTYPE_OPEN_SYSTEM,
@@ -93,9 +93,9 @@ enum nl80211_auth_type {
  * Channel states used by the DFS code.
  *
  * @NL80211_DFS_USABLE: The channel can be used, but channel availability
- *	check (CAC) must be performed before using it for AP or IBSS.
+ *  check (CAC) must be performed before using it for AP or IBSS.
  * @NL80211_DFS_UNAVAILABLE: A radar has been detected on this channel, it
- *	is therefore marked as not available.
+ *  is therefore marked as not available.
  * @NL80211_DFS_AVAILABLE: The channel has been CAC checked and is available.
  */
 enum nl80211_dfs_state {
@@ -110,7 +110,7 @@ enum nl80211_dfs_state {
  * @NL80211_BAND_5GHZ: around 5 GHz band (4.9 - 5.7 GHz)
  * @NL80211_BAND_60GHZ: around 60 GHz band (58.32 - 64.80 GHz)
  * @NUM_NL80211_BANDS: number of bands, avoid using this in userspace
- *	since newer kernel versions may support more bands
+ *  since newer kernel versions may support more bands
  */
 enum nl80211_band {
   NL80211_BAND_2GHZ,
@@ -128,19 +128,19 @@ enum nl80211_band {
  * @NL80211_IFTYPE_STATION: managed BSS member
  * @NL80211_IFTYPE_AP: access point
  * @NL80211_IFTYPE_AP_VLAN: VLAN interface for access points; VLAN interfaces
- *	are a bit special in that they must always be tied to a pre-existing
- *	AP type interface.
+ *  are a bit special in that they must always be tied to a pre-existing
+ *  AP type interface.
  * @NL80211_IFTYPE_WDS: wireless distribution interface
  * @NL80211_IFTYPE_MONITOR: monitor interface receiving all frames
  * @NL80211_IFTYPE_MESH_POINT: mesh point
  * @NL80211_IFTYPE_P2P_CLIENT: P2P client
  * @NL80211_IFTYPE_P2P_GO: P2P group owner
  * @NL80211_IFTYPE_P2P_DEVICE: P2P device interface type, this is not a netdev
- *	and therefore can't be created in the normal ways, use the
- *	%NL80211_CMD_START_P2P_DEVICE and %NL80211_CMD_STOP_P2P_DEVICE
- *	commands to create and destroy one
+ *  and therefore can't be created in the normal ways, use the
+ *  %NL80211_CMD_START_P2P_DEVICE and %NL80211_CMD_STOP_P2P_DEVICE
+ *  commands to create and destroy one
  * @NL80211_IF_TYPE_OCB: Outside Context of a BSS
- *	This mode corresponds to the MIB variable dot11OCBActivated=true
+ *  This mode corresponds to the MIB variable dot11OCBActivated=true
  * @NL80211_IFTYPE_NAN: NAN device interface type (not a netdev)
  * @NL80211_IFTYPE_MAX: highest interface type number currently defined
  * @NUM_NL80211_IFTYPES: number of defined interface types

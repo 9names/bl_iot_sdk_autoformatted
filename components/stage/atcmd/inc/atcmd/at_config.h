@@ -102,30 +102,27 @@ typedef struct {
 
   at_hi_t
       wifi_opr_rate_mask;     /* 0xFFFFFFFF INT Operational data rate mask,
-                                 0xffffffff is allenabled:
-                                                                  BIT0: 1 Mbps
-                                 BIT1: 2 Mbps	BIT2: 5.5 Mbps	BIT3: 11 Mbps
-                                 BIT6: 6 Mbps	BIT7: 9 Mbps     BIT8: 12 Mbps
-                                 BIT9: 18 Mbps	BIT10: 24 Mbps	BIT11: 36 Mbps
-                                 BIT12: 48 Mbps	BIT13: 54 Mbps
-                                                                                                                                                                                                          */
+                                 0xffffffff is allenabled:     BIT0: 1 Mbps    BIT1: 2
+                                 Mbps    BIT2: 5.5 Mbps  BIT3: 11 Mbps   BIT6: 6
+                                 Mbps    BIT7: 9 Mbps     BIT8: 12 Mbps   BIT9: 18 Mbps
+                                 BIT10: 24 Mbps  BIT11: 36 Mbps  BIT12: 48 Mbps
+                                 BIT13: 54 Mbps
+                                                                                                      */
   at_hi_t wifi_bas_rate_mask; /* 0x0000000F INT Basic data rate mask, 0x0000000f
                                  is [1,2,5.5,11] */
-  at_di_t
-      wifi_mode; /* 1 INT Radio Mode.
-                                                                              0=IDLE,
-                                                                              1=STA
-                    (Supported Security Modes: OPEN,WEP OpenSystem,WEP
-                    SharedKey,WPA/WPA2), 2=MiniAP (Supported Security Modes:
-                    OPEN, WEP OpenSystem -Supported Classes: b,g)
-                                                                              3=IBSS(Supported
-                    Security Modes: OPEN, WEP OpenSystem, WEP SharedKey);
-                                                                              */
+  at_di_t wifi_mode;          /* 1 INT Radio Mode.
+                                                   0=IDLE,
+                                                   1=STA (Supported Security Modes:
+                                 OPEN,WEP OpenSystem,WEP SharedKey,WPA/WPA2),          2=MiniAP
+                                 (Supported Security Modes: OPEN, WEP OpenSystem
+                                 -Supported Classes: b,g)          3=IBSS(Supported Security
+                                 Modes: OPEN, WEP OpenSystem, WEP SharedKey);
+                                                   */
   at_di_t
       wifi_auth_type;     /* 0 INT Authentication type used in IBSS mode:
-                                                                                                                                                  0=OpenSystem,
-                                                                                                                                                  1=SharedKey
-                                                                                                                                                  */
+                                                                          0=OpenSystem,
+                                                                          1=SharedKey
+                                                                          */
   at_di_t wifi_powersave; /* 1 INT Allows choosing between Active (0), PS (1) or
                              Fast-PS (2) */
   at_di_t wifi_tx_power;  /* 18 INT Transmit power [from 0 to 18], in dBm */
@@ -140,16 +137,16 @@ typedef struct {
   at_di_t wifi_priv_mode; /* 2 INT Privacy Mode: 0=none,1=WEP, 2=WPAPersonal
                              (TKIP/AES) or WPA2-Personal (TKIP/AES) */
   at_hex_t wifi_wep_keys[4][16]; /*
-                                                                  wifi_wep_keys[1]
-                                    00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
-                                    HEX[16] WEP key buffer wifi_wep_keys[1]
-                                    00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
-                                    HEX[16] WEP key buffer wifi_wep_keys[2]
-                                    00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
-                                    HEX[16] WEP key buffer wifi_wep_keys[3]
-                                    00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
-                                    HEX[16] WEP key buffer
-                                                                  */
+                                  wifi_wep_keys[1]
+                                  00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
+                                  HEX[16] WEP key buffer wifi_wep_keys[1]
+                                  00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
+                                  HEX[16] WEP key buffer wifi_wep_keys[2]
+                                  00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
+                                  HEX[16] WEP key buffer wifi_wep_keys[3]
+                                  00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
+                                  HEX[16] WEP key buffer
+                                  */
   at_hex_t wifi_wep_key_lens[4]; /* 00:00:00:00 HEX[4] Four octets specifying
                                     the length of the actual key data in each
                                     WEP key buffer.*/
@@ -169,7 +166,7 @@ typedef struct {
                            MiniAP mode: user can customize the ip_ipaddr of the
                            MiniAP, the ip_address of the client is automatically
                            assigned by the MiniAP)
-                                                             */
+                                 */
   at_di_t ip_use_httpd; /* 1 INT HTTP server on/off.0=off, 1=on */
   at_di_t
       ip_mtu; /* 1500 INT IP maximum transmission unit size. Limit: from 634 to
@@ -177,11 +174,11 @@ typedef struct {
   at_text_t ip_hostname[32]; /* iwm-02-09-97 TEXT[32] IP local hostname */
   at_text_t
       ip_apdomainname[32]; /* captiveportal.net TEXT[32] IP domain name in Mini
-                              AP mode. If the AP domain name is not quickly
-                              opened, it¡¯s suggested to turn off an eventual
-                              proxy server (check the connection settings of the
-                              device or the browser preferences).
-                                                            */
+                           AP mode. If the AP domain name is not quickly opened,
+                           it¡¯s suggested to turn off an eventual proxy server
+                           (check the connection settings of the device or the
+                           browser preferences).
+                            */
   at_ip_t
       ip_ipaddr; /* 192.168.0.50 IP IP address for static usage (DHCP off) */
   at_ip_t

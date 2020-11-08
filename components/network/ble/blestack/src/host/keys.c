@@ -425,7 +425,8 @@ static int keys_commit(void)
 }
 
 // SETTINGS_STATIC_HANDLER_DEFINE(bt_keys, "bt/keys", NULL, keys_set,
-// keys_commit, 			       NULL);
+// keys_commit,
+//                 NULL);
 
 #if defined(BFLB_BLE)
 int bt_keys_load(void) {

@@ -203,7 +203,7 @@ void vCoRoutineAddToDelayedList(TickType_t xTicksToDelay, List_t *pxEventList) {
 static void prvCheckPendingReadyList(void) {
   /* Are there any co-routines waiting to get moved to the ready list?  These
   are co-routines that have been readied by an ISR.  The ISR cannot access
-  the	ready lists itself. */
+  the ready lists itself. */
   while (listLIST_IS_EMPTY(&xPendingReadyCoRoutineList) == pdFALSE) {
     CRCB_t *pxUnblockedCRCB;
 
@@ -293,7 +293,7 @@ void vCoRoutineSchedule(void) {
   }
 
   /* listGET_OWNER_OF_NEXT_ENTRY walks through the list, so the co-routines
-   of the	same priority get an equal share of the processor time. */
+   of the same priority get an equal share of the processor time. */
   listGET_OWNER_OF_NEXT_ENTRY(
       pxCurrentCoRoutine,
       &(pxReadyCoRoutineLists[uxTopCoRoutineReadyPriority]));

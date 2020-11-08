@@ -67,8 +67,8 @@ extern "C" {
 
 #define SIZE_LIMIT_MASK ((AT_PARA_MAX_SIZE << 1) - 1)
 #define SIZE_LIMIT(opt) ((opt)&SIZE_LIMIT_MASK)
-/* #define END_PARA(opt)	((((opt) & AET_PARA)!=0)?1:0) */
-/* #define END_LINE(opt)	((((opt) & AET_LINE)!=0)?1:0) */
+/* #define END_PARA(opt)    ((((opt) & AET_PARA)!=0)?1:0) */
+/* #define END_LINE(opt)    ((((opt) & AET_LINE)!=0)?1:0) */
 
 typedef enum {
   APT_TEXT, /* text */

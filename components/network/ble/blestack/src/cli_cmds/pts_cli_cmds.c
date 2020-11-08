@@ -936,15 +936,15 @@ static int set_attr_enc_key_size(const struct bt_gatt_attr *attr,
   /*if (!bt_uuid_cmp(attr->uuid, BT_UUID_GATT_PRIMARY) ||
       !bt_uuid_cmp(attr->uuid, BT_UUID_GATT_SECONDARY) ||
       !bt_uuid_cmp(attr->uuid, BT_UUID_GATT_INCLUDE)) {
-          return -1;
+      return -1;
   }*/
 
   /* Fail if permissions are not set */
   /*if (!(attr->perm & ((BT_GATT_PERM_READ_ENCRYPT | BT_GATT_PERM_READ_AUTHEN) |
-                                           (BT_GATT_PERM_WRITE_ENCRYPT |
+                       (BT_GATT_PERM_WRITE_ENCRYPT |
   BT_GATT_PERM_WRITE_AUTHEN)))) {
 
-          return -1;
+      return -1;
   }*/
 
   vOutputString("perm:0x%x\r\n", attr->perm);
@@ -1253,8 +1253,8 @@ static void pts_ble_start_advertise(char *pcWriteBuffer, int xWriteBufferLen,
       ad = &pts_ad;
       ad_len = 1;
     } /*else{
-     ad = ad_discov;
-     ad_len = ARRAY_SIZE(ad_discov);
+         ad = ad_discov;
+         ad_len = ARRAY_SIZE(ad_discov);
      }*/
 
   } else {

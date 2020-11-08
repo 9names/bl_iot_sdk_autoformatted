@@ -112,7 +112,7 @@ typedef struct ipcp_options {
   u32_t dnsaddr[2]; /* Primary and secondary MS DNS entries */
 #endif              /* LWIP_DNS */
 #if 0               /* UNUSED - WINS */
-    u32_t winsaddr[2];	/* Primary and secondary MS WINS entries */
+    u32_t winsaddr[2];  /* Primary and secondary MS WINS entries */
 #endif              /* UNUSED - WINS */
 
 #if VJ_SUPPORT

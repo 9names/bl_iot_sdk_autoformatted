@@ -11,7 +11,7 @@
  * All rights reserved.  The Berkeley software License Agreement
  * specifies the terms and conditions for redistribution.
  *
- *	@(#)errno.h	7.1 (Berkeley) 6/4/86
+ *  @(#)errno.h 7.1 (Berkeley) 6/4/86
  */
 
 #ifndef __INCerrnoh

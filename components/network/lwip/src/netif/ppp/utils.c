@@ -246,11 +246,11 @@ int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
       base = 16;
       break;
 #if 0  /* unused (and wrong on LLP64 systems) */
-	case 'p':
-	    val = (unsigned long) va_arg(args, void *);
-	    base = 16;
-	    neg = 2;
-	    break;
+    case 'p':
+        val = (unsigned long) va_arg(args, void *);
+        base = 16;
+        neg = 2;
+        break;
 #endif /* unused (and wrong on LLP64 systems) */
     case 's':
       str = va_arg(args, char *);
@@ -261,9 +261,9 @@ int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
       str = num;
       break;
 #if 0  /* do we always have strerror() in embedded ? */
-	case 'm':
-	    str = strerror(errno);
-	    break;
+    case 'm':
+        str = strerror(errno);
+        break;
 #endif /* do we always have strerror() in embedded ? */
     case 'I':
       ip = va_arg(args, u32_t);
@@ -273,12 +273,12 @@ int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
       str = num;
       break;
 #if 0         /* need port */
-	case 't':
-	    time(&t);
-	    str = ctime(&t);
-	    str += 4;		/* chop off the day name */
-	    str[15] = 0;	/* chop off year and newline */
-	    break;
+    case 't':
+        time(&t);
+        str = ctime(&t);
+        str += 4;       /* chop off the day name */
+        str[15] = 0;    /* chop off year and newline */
+        break;
 #endif        /* need port */
     case 'v': /* "visible" string */
     case 'q': /* quoted string */
@@ -440,9 +440,9 @@ log_packet(p, len, prefix, level)
     char *prefix;
     int level;
 {
-	init_pr_log(prefix, level);
-	ppp_format_packet(p, len, pr_log, &level);
-	end_pr_log();
+    init_pr_log(prefix, level);
+    ppp_format_packet(p, len, pr_log, &level);
+    end_pr_log();
 }
 #endif /* UNUSED */
 
@@ -498,30 +498,30 @@ static void ppp_format_packet(const u_char *p, int len,
  * init_pr_log, end_pr_log - initialize and finish use of pr_log.
  */
 
-static char line[256];		/* line to be logged accumulated here */
-static char *linep;		/* current pointer within line */
-static int llevel;		/* level for logging */
+static char line[256];      /* line to be logged accumulated here */
+static char *linep;     /* current pointer within line */
+static int llevel;      /* level for logging */
 
 void
 init_pr_log(prefix, level)
      const char *prefix;
      int level;
 {
-	linep = line;
-	if (prefix != NULL) {
-		ppp_strlcpy(line, prefix, sizeof(line));
-		linep = line + strlen(line);
-	}
-	llevel = level;
+    linep = line;
+    if (prefix != NULL) {
+        ppp_strlcpy(line, prefix, sizeof(line));
+        linep = line + strlen(line);
+    }
+    llevel = level;
 }
 
 void
 end_pr_log()
 {
-	if (linep != line) {
-		*linep = 0;
-		ppp_log_write(llevel, line);
-	}
+    if (linep != line) {
+        *linep = 0;
+        ppp_log_write(llevel, line);
+    }
 }
 
 /*
@@ -530,47 +530,47 @@ end_pr_log()
 void
 pr_log (void *arg, const char *fmt, ...)
 {
-	int l, n;
-	va_list pvar;
-	char *p, *eol;
-	char buf[256];
+    int l, n;
+    va_list pvar;
+    char *p, *eol;
+    char buf[256];
 
-	va_start(pvar, fmt);
-	n = ppp_vslprintf(buf, sizeof(buf), fmt, pvar);
-	va_end(pvar);
+    va_start(pvar, fmt);
+    n = ppp_vslprintf(buf, sizeof(buf), fmt, pvar);
+    va_end(pvar);
 
-	p = buf;
-	eol = strchr(buf, '\n');
-	if (linep != line) {
-		l = (eol == NULL)? n: eol - buf;
-		if (linep + l < line + sizeof(line)) {
-			if (l > 0) {
-				memcpy(linep, buf, l);
-				linep += l;
-			}
-			if (eol == NULL)
-				return;
-			p = eol + 1;
-			eol = strchr(p, '\n');
-		}
-		*linep = 0;
-		ppp_log_write(llevel, line);
-		linep = line;
-	}
+    p = buf;
+    eol = strchr(buf, '\n');
+    if (linep != line) {
+        l = (eol == NULL)? n: eol - buf;
+        if (linep + l < line + sizeof(line)) {
+            if (l > 0) {
+                memcpy(linep, buf, l);
+                linep += l;
+            }
+            if (eol == NULL)
+                return;
+            p = eol + 1;
+            eol = strchr(p, '\n');
+        }
+        *linep = 0;
+        ppp_log_write(llevel, line);
+        linep = line;
+    }
 
-	while (eol != NULL) {
-		*eol = 0;
-		ppp_log_write(llevel, p);
-		p = eol + 1;
-		eol = strchr(p, '\n');
-	}
+    while (eol != NULL) {
+        *eol = 0;
+        ppp_log_write(llevel, p);
+        p = eol + 1;
+        eol = strchr(p, '\n');
+    }
 
-	/* assumes sizeof(buf) <= sizeof(line) */
-	l = buf + n - p;
-	if (l > 0) {
-		memcpy(line, p, n);
-		linep = line + l;
-	}
+    /* assumes sizeof(buf) <= sizeof(line) */
+    l = buf + n - p;
+    if (l > 0) {
+        memcpy(line, p, n);
+        linep = line + l;
+    }
 }
 #endif /* UNUSED */
 
@@ -626,13 +626,13 @@ static void ppp_log_write(int level, char *buf) {
   PPPDEBUG(level, ("%s\n", buf));
 #if 0
     if (log_to_fd >= 0 && (level != LOG_DEBUG || debug)) {
-	int n = strlen(buf);
+    int n = strlen(buf);
 
-	if (n > 0 && buf[n-1] == '\n')
-	    --n;
-	if (write(log_to_fd, buf, n) != n
-	    || write(log_to_fd, "\n", 1) != 1)
-	    log_to_fd = -1;
+    if (n > 0 && buf[n-1] == '\n')
+        --n;
+    if (write(log_to_fd, buf, n) != n
+        || write(log_to_fd, "\n", 1) != 1)
+        log_to_fd = -1;
     }
 #endif
 }
@@ -749,23 +749,23 @@ void ppp_dump_packet(ppp_pcb *pcb, const char *tag, unsigned char *p, int len) {
 ssize_t
 complete_read(int fd, void *buf, size_t count)
 {
-	size_t done;
-	ssize_t nb;
-	char *ptr = buf;
+    size_t done;
+    ssize_t nb;
+    char *ptr = buf;
 
-	for (done = 0; done < count; ) {
-		nb = read(fd, ptr, count - done);
-		if (nb < 0) {
-			if (errno == EINTR)
-				continue;
-			return -1;
-		}
-		if (nb == 0)
-			break;
-		done += nb;
-		ptr += nb;
-	}
-	return done;
+    for (done = 0; done < count; ) {
+        nb = read(fd, ptr, count - done);
+        if (nb < 0) {
+            if (errno == EINTR)
+                continue;
+            return -1;
+        }
+        if (nb == 0)
+            break;
+        done += nb;
+        ptr += nb;
+    }
+    return done;
 }
 
 /* Procedures for locking the serial device using a lock file. */
@@ -795,14 +795,14 @@ lock(dev)
 
     result = mklock (dev, (void *) 0);
     if (result == 0) {
-	ppp_strlcpy(lock_file, dev, sizeof(lock_file));
-	return 0;
+    ppp_strlcpy(lock_file, dev, sizeof(lock_file));
+    return 0;
     }
 
     if (result > 0)
         ppp_notice("Device %s is locked by pid %d", dev, result);
     else
-	ppp_error("Can't create lock file %s", lock_file);
+    ppp_error("Can't create lock file %s", lock_file);
     return -1;
 
 #else /* LOCKLIB */
@@ -814,83 +814,83 @@ lock(dev)
     struct stat sbuf;
 
     if (stat(dev, &sbuf) < 0) {
-	ppp_error("Can't get device number for %s: %m", dev);
-	return -1;
+    ppp_error("Can't get device number for %s: %m", dev);
+    return -1;
     }
     if ((sbuf.st_mode & S_IFMT) != S_IFCHR) {
-	ppp_error("Can't lock %s: not a character device", dev);
-	return -1;
+    ppp_error("Can't lock %s: not a character device", dev);
+    return -1;
     }
     ppp_slprintf(lock_file, sizeof(lock_file), "%s/LK.%03d.%03d.%03d",
-	     LOCK_DIR, major(sbuf.st_dev),
-	     major(sbuf.st_rdev), minor(sbuf.st_rdev));
+         LOCK_DIR, major(sbuf.st_dev),
+         major(sbuf.st_rdev), minor(sbuf.st_rdev));
 #else
     char *p;
     char lockdev[MAXPATHLEN];
 
     if ((p = strstr(dev, "dev/")) != NULL) {
-	dev = p + 4;
-	strncpy(lockdev, dev, MAXPATHLEN-1);
-	lockdev[MAXPATHLEN-1] = 0;
-	while ((p = strrchr(lockdev, '/')) != NULL) {
-	    *p = '_';
-	}
-	dev = lockdev;
+    dev = p + 4;
+    strncpy(lockdev, dev, MAXPATHLEN-1);
+    lockdev[MAXPATHLEN-1] = 0;
+    while ((p = strrchr(lockdev, '/')) != NULL) {
+        *p = '_';
+    }
+    dev = lockdev;
     } else
-	if ((p = strrchr(dev, '/')) != NULL)
-	    dev = p + 1;
+    if ((p = strrchr(dev, '/')) != NULL)
+        dev = p + 1;
 
     ppp_slprintf(lock_file, sizeof(lock_file), "%s/LCK..%s", LOCK_DIR, dev);
 #endif
 
     while ((fd = open(lock_file, O_EXCL | O_CREAT | O_RDWR, 0644)) < 0) {
-	if (errno != EEXIST) {
-	    ppp_error("Can't create lock file %s: %m", lock_file);
-	    break;
-	}
+    if (errno != EEXIST) {
+        ppp_error("Can't create lock file %s: %m", lock_file);
+        break;
+    }
 
-	/* Read the lock file to find out who has the device locked. */
-	fd = open(lock_file, O_RDONLY, 0);
-	if (fd < 0) {
-	    if (errno == ENOENT) /* This is just a timing problem. */
-		continue;
-	    ppp_error("Can't open existing lock file %s: %m", lock_file);
-	    break;
-	}
+    /* Read the lock file to find out who has the device locked. */
+    fd = open(lock_file, O_RDONLY, 0);
+    if (fd < 0) {
+        if (errno == ENOENT) /* This is just a timing problem. */
+        continue;
+        ppp_error("Can't open existing lock file %s: %m", lock_file);
+        break;
+    }
 #ifndef LOCK_BINARY
-	n = read(fd, lock_buffer, 11);
+    n = read(fd, lock_buffer, 11);
 #else
-	n = read(fd, &pid, sizeof(pid));
+    n = read(fd, &pid, sizeof(pid));
 #endif /* LOCK_BINARY */
-	close(fd);
-	fd = -1;
-	if (n <= 0) {
-	    ppp_error("Can't read pid from lock file %s", lock_file);
-	    break;
-	}
+    close(fd);
+    fd = -1;
+    if (n <= 0) {
+        ppp_error("Can't read pid from lock file %s", lock_file);
+        break;
+    }
 
-	/* See if the process still exists. */
+    /* See if the process still exists. */
 #ifndef LOCK_BINARY
-	lock_buffer[n] = 0;
-	pid = atoi(lock_buffer);
+    lock_buffer[n] = 0;
+    pid = atoi(lock_buffer);
 #endif /* LOCK_BINARY */
-	if (pid == getpid())
-	    return 1;		/* somebody else locked it for us */
-	if (pid == 0
-	    || (kill(pid, 0) == -1 && errno == ESRCH)) {
-	    if (unlink (lock_file) == 0) {
-		ppp_notice("Removed stale lock on %s (pid %d)", dev, pid);
-		continue;
-	    }
-	    ppp_warn("Couldn't remove stale lock on %s", dev);
-	} else
-	    ppp_notice("Device %s is locked by pid %d", dev, pid);
-	break;
+    if (pid == getpid())
+        return 1;       /* somebody else locked it for us */
+    if (pid == 0
+        || (kill(pid, 0) == -1 && errno == ESRCH)) {
+        if (unlink (lock_file) == 0) {
+        ppp_notice("Removed stale lock on %s (pid %d)", dev, pid);
+        continue;
+        }
+        ppp_warn("Couldn't remove stale lock on %s", dev);
+    } else
+        ppp_notice("Device %s is locked by pid %d", dev, pid);
+    break;
     }
 
     if (fd < 0) {
-	lock_file[0] = 0;
-	return -1;
+    lock_file[0] = 0;
+    return -1;
     }
 
     pid = getpid();
@@ -928,12 +928,12 @@ relock(pid)
     char lock_buffer[12];
 
     if (lock_file[0] == 0)
-	return -1;
+    return -1;
     fd = open(lock_file, O_WRONLY, 0);
     if (fd < 0) {
-	ppp_error("Couldn't reopen lock file %s: %m", lock_file);
-	lock_file[0] = 0;
-	return -1;
+    ppp_error("Couldn't reopen lock file %s: %m", lock_file);
+    lock_file[0] = 0;
+    return -1;
     }
 
 #ifndef LOCK_BINARY
@@ -956,11 +956,11 @@ unlock()
 {
     if (lock_file[0]) {
 #ifdef LOCKLIB
-	(void) rmlock(lock_file, (void *) 0);
+    (void) rmlock(lock_file, (void *) 0);
 #else
-	unlink(lock_file);
+    unlink(lock_file);
 #endif
-	lock_file[0] = 0;
+    lock_file[0] = 0;
     }
 }
 

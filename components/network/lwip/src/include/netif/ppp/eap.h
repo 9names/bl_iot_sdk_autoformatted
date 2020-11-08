@@ -55,7 +55,7 @@ extern "C" {
 #define EAPT_RSA 9            /* RSA Public Key Authentication */
 #define EAPT_DSS 10           /* DSS Unilateral */
 #define EAPT_KEA 11           /* KEA */
-#define EAPT_KEA_VALIDATE 12  /* KEA-VALIDATE	*/
+#define EAPT_KEA_VALIDATE 12  /* KEA-VALIDATE */
 #define EAPT_TLS 13           /* EAP-TLS */
 #define EAPT_DEFENDER 14      /* Defender Token (AXENT) */
 #define EAPT_W2K 15           /* Windows 2000 EAP */

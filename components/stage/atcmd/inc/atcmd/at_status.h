@@ -38,31 +38,31 @@ extern "C" {
 
 typedef struct {
   at_text_t version[32]; /* 140128-caf4b79-SPWF01S SPWF01S Software Version */
-  at_di_t
-      reset_reason;         /* 2 H/W reported reason for last reset
-                                                                                                                              0 = POWER_ON
-                                                                                                                              1 = WATCHDOG
-                                                                                                                              2 = SOFT RESET
-                                                                                                                              3 = LOW POWER
-                                                                                                                              */
-  at_di_t conf_flag;        /* 5 Module HW revision */
-  at_di_t system_uptime;    /* 22006 System running time in seconds */
+  at_di_t reset_reason;  /* 2 H/W reported reason for last reset
+                                                               0 = POWER_ON
+                                                               1 = WATCHDOG
+                                                               2 = SOFT RESET
+                                                               3 = LOW POWER
+                                                               */
+  at_di_t conf_flag;     /* 5 Module HW revision */
+  at_di_t system_uptime; /* 22006 System running time in seconds */
   at_di_t system_sleeptime; /* 500 System sleeping time in seconds */
   at_di_t
       gpio_enable; /* 0 Interrupt-enabled GPIO bitmask, expressed in base 10 */
   at_di_t captiveportal;   /* 1 Mini AP enabled/disabled */
   at_di_t wifi_state;      /* 10
-                                                       0= Hardware power up
-                                                       1=Hardware failure
-                                                       2=Radio task terminated by
-                              user      3=Radio idle      4=Scan in progress      5=Scan complete
-                                                       6=Join in progress
-                                                       7=Joined
-                                                       8=Access point started
-                                                       9=802.11 handshake complete
-                                                       10=Ready to transmit data
-                              (i.e. ¡°Link Up¡±)
-                                                       */
+                               0= Hardware power up
+                               1=Hardware failure
+                               2=Radio task terminated by user
+                               3=Radio idle
+                               4=Scan in progress
+                               5=Scan complete
+                               6=Join in progress
+                               7=Joined
+                               8=Access point started
+                               9=802.11 handshake complete
+                               10=Ready to transmit data (i.e. ¡°Link Up¡±)
+                               */
   at_hex_t wifi_bssid[6];  /* 00:18:F8:3C:D9:18 BSSID of current association */
   at_di_t wifi_aid;        /* 0 Association ID of current association */
   at_di_t wifi_channelnum; /* 11 Current radio channel number */
@@ -83,9 +83,8 @@ typedef struct {
   at_ip_t ip_dns;         /* 192.168.123.20 Current IP DNS server */
   at_di_t
       ip_sock_open; /* 0 Bitmask of Socket Client ID currently opened, expressed
-                       in base 10 (ip_sock_open=13 (00001101 in binary), means
-                       that socket#0socket#2 and socket#3 are currently opened)
-                     */
+                     in base 10 (ip_sock_open=13 (00001101 in binary), means
+                     that socket#0socket#2 and socket#3 are currently opened) */
   at_di_t ip_sockd_port; /* 0 Socket server port opened */
   at_di_t free_heap;     /* 30472 Current free heap space */
   at_di_t min_heap;      /* 26552 Minimum free heap space thus far */
@@ -95,14 +94,14 @@ typedef struct {
 typedef struct {
   at_di_t link_id;       /* 0 Identifier of the client */
   at_di_t state;         /* 4
-                                          0 = Hardware Power Up
-                                          1 = HW link initialization
-                                          2 = Client Link identifier allocated
-                                          3 = Authenticated
-                                          4 = Associated
-                                          5 = Peer lost beacons
-                                          6 = Peer in power save state
-                                          */
+                          0 = Hardware Power Up
+                          1 = HW link initialization
+                          2 = Client Link identifier allocated
+                          3 = Authenticated
+                          4 = Associated
+                          5 = Peer lost beacons
+                          6 = Peer in power save state
+                          */
   at_hex_t addr[6];      /* 90:18:7C:96:0D:0B MAC address of the client */
   at_di_t last_rx;       /* 21244 Timestamp of last received packet */
   at_di_t last_tx;       /* 21244 Timestamp of last transmitted packet */

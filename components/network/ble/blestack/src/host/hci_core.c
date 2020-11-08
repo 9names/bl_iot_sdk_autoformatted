@@ -4774,37 +4774,37 @@ int bt_addr_le_create_static(bt_addr_le_t *addr) {
 #if 0
 static const char *ver_str(u8_t ver)
 {
-	const char * const str[] = {
-		"1.0b", "1.1", "1.2", "2.0", "2.1", "3.0", "4.0", "4.1", "4.2",
-		"5.0", "5.1",
-	};
+    const char * const str[] = {
+        "1.0b", "1.1", "1.2", "2.0", "2.1", "3.0", "4.0", "4.1", "4.2",
+        "5.0", "5.1",
+    };
 
-	if (ver < ARRAY_SIZE(str)) {
-		return str[ver];
-	}
+    if (ver < ARRAY_SIZE(str)) {
+        return str[ver];
+    }
 
-	return "unknown";
+    return "unknown";
 }
 #endif
 
 static void bt_dev_show_info(void) {
 #if 0
-	int i;
+    int i;
 
-	BT_INFO("Identity%s: %s", bt_dev.id_count > 1 ? "[0]" : "",
-		bt_addr_le_str(&bt_dev.id_addr[0]));
+    BT_INFO("Identity%s: %s", bt_dev.id_count > 1 ? "[0]" : "",
+        bt_addr_le_str(&bt_dev.id_addr[0]));
 
-	for (i = 1; i < bt_dev.id_count; i++) {
-		BT_INFO("Identity[%d]: %s",
-			i, bt_addr_le_str(&bt_dev.id_addr[i]));
-	}
+    for (i = 1; i < bt_dev.id_count; i++) {
+        BT_INFO("Identity[%d]: %s",
+            i, bt_addr_le_str(&bt_dev.id_addr[i]));
+    }
 
-	BT_INFO("HCI: version %s (0x%02x) revision 0x%04x, manufacturer 0x%04x",
-		ver_str(bt_dev.hci_version), bt_dev.hci_version,
-		bt_dev.hci_revision, bt_dev.manufacturer);
-	BT_INFO("LMP: version %s (0x%02x) subver 0x%04x",
-		ver_str(bt_dev.lmp_version), bt_dev.lmp_version,
-		bt_dev.lmp_subversion);
+    BT_INFO("HCI: version %s (0x%02x) revision 0x%04x, manufacturer 0x%04x",
+        ver_str(bt_dev.hci_version), bt_dev.hci_version,
+        bt_dev.hci_revision, bt_dev.manufacturer);
+    BT_INFO("LMP: version %s (0x%02x) subver 0x%04x",
+        ver_str(bt_dev.lmp_version), bt_dev.lmp_version,
+        bt_dev.lmp_subversion);
 #endif
 }
 #else

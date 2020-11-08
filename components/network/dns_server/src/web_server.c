@@ -70,8 +70,8 @@ static void web_http_server(struct netconn *conn) {
                       NETCONN_NOCOPY);
       }
       //      else if(buf[5]=='j') {
-      //    	  netconn_write(conn, json_unformatted,
-      //    strlen(json_unformatted), NETCONN_NOCOPY);
+      //        netconn_write(conn, json_unformatted, strlen(json_unformatted),
+      //        NETCONN_NOCOPY);
       //      }
       else {
         netconn_write(conn, http_index_hml, sizeof(http_index_hml) - 1,

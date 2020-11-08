@@ -101,8 +101,8 @@ static void low_level_init(struct netif *netif) {
     xSemaphoreTake( s_xSemaphore, 0);
   }
 
-  /* initialize MAC address in ethernet MAC */ 
-  ETH_MACAddressConfig(ETH_MAC_Address0, netif->hwaddr); 
+  /* initialize MAC address in ethernet MAC */
+  ETH_MACAddressConfig(ETH_MAC_Address0, netif->hwaddr);
 
   /* Initialize Tx Descriptors list: Chain Mode */
   ETH_DMATxDescChainInit(DMATxDscrTab, &Tx_Buff[0][0], ETH_TXBUFNB);
@@ -110,7 +110,7 @@ static void low_level_init(struct netif *netif) {
   ETH_DMARxDescChainInit(DMARxDscrTab, &Rx_Buff[0][0], ETH_RXBUFNB);
 
   /* Enable Ethernet Rx interrrupt */
-  { 
+  {
     for(i=0; i<ETH_RXBUFNB; i++)
     {
       ETH_DMARxDescReceiveITConfig(&DMARxDscrTab[i], ENABLE);

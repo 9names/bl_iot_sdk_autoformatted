@@ -125,7 +125,7 @@ const struct cli_command btStackCmdSet[] STATIC_CLI_CMD_ATTRIBUTE = {
     [Mode, 0:discov, 1:non-discov]\r\n\
     [Adv Interval Min,0x0020-4000,e.g.0030]\r\n\
     [Adv Interval Max,0x0020-4000,e.g.0060]\r\n", ble_start_advertise},
-     
+
     {"ble_stop_adv", "\r\nble_stop_adv:[Stop advertising]\r\nParameter[Null]\r\n", ble_stop_advertise},
 
     {"ble_read_local_address", "\r\nble_read_local_address:[Read local address]\r\n", ble_read_local_address},
@@ -137,15 +137,15 @@ const struct cli_command btStackCmdSet[] STATIC_CLI_CMD_ATTRIBUTE = {
      [Address type, 0:ADDR_PUBLIC, 1:ADDR_RAND, 2:ADDR_RPA_OR_PUBLIC, 3:ADDR_RPA_OR_RAND]\r\n\
      [Address value, e.g.112233AABBCC]\r\n", ble_connect},
 #endif // CONFIG_BT_CENTRAL
-    
+
     {"ble_disconnect", "\r\nble_disconnect:[Disconnect remote device]\r\n\
     [Address type, 0:ADDR_PUBLIC, 1:ADDR_RAND, 2:ADDR_RPA_OR_PUBLIC, 3:ADDR_RPA_OR_RAND]\r\n\
     [Address value,e.g.112233AABBCC]\r\n", ble_disconnect},
-	
+
     {"ble_select_conn", "\r\nble_select_conn:[Select a specific connection]\r\n\
     [Address type, 0:ADDR_PUBLIC, 1:ADDR_RAND, 2:ADDR_RPA_OR_PUBLIC, 3:ADDR_RPA_OR_RAND]\r\n\
     [Address value, e.g.112233AABBCC]\r\n", ble_select_conn},
-     
+
     {"ble_unpair", "\r\nble_unpair:[Unpair connection]\r\n\
     [Address type, 0:ADDR_PUBLIC, 1:ADDR_RAND, 2:ADDR_RPA_OR_PUBLIC, 3:ADDR_RPA_OR_RAND]\r\n\
     [Address value, all 0: unpair all connection, otherwise:unpair specific connection]\r\n", ble_unpair},

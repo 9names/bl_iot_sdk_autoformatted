@@ -90,9 +90,9 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_QUEUE_OOSEQ 1
 
 /* TCP Maximum segment size. */
-//#define TCP_MSS                 (1500 - 40)	  /* TCP_MSS = (Ethernet MTU -
+//#define TCP_MSS                 (1500 - 40)     /* TCP_MSS = (Ethernet MTU -
 //IP header size - TCP header size) */ #define TCP_MSS                 (1500 -
-//80)	  /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size) */
+//80)     /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size) */
 #define TCP_MSS                                                                \
   (800 - 40 - 80 +                                                             \
    8) /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size) */

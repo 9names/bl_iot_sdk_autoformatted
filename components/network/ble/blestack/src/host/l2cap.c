@@ -818,7 +818,7 @@ static void le_conn_req(struct bt_l2cap *l2cap, u8_t ident,
     goto rsp;
   }
 
-  /* Check if connection has minimum required security level */
+/* Check if connection has minimum required security level */
 #if defined(CONFIG_BT_SMP)
   if (conn->sec_level < server->sec_level) {
     rsp->result = sys_cpu_to_le16(BT_L2CAP_LE_ERR_AUTHENTICATION);

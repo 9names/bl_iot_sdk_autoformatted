@@ -131,7 +131,7 @@ failed_nothing:
     for (i = 0; i < IPERF_BUFSZ; i ++)
         send_buf[i] = i & 0xff;
 
-    while (param.mode != IPERF_MODE_STOP) 
+    while (param.mode != IPERF_MODE_STOP)
     {
 
 
@@ -149,7 +149,7 @@ failed_nothing:
         sentlen = 0;
 
         tick1 = xTaskGetTickCount();
-        while(param.mode != IPERF_MODE_STOP) 
+        while(param.mode != IPERF_MODE_STOP)
         {
             tick2 = xTaskGetTickCount();
             if (tick2 - tick1 >= 1000 * 5)
@@ -165,7 +165,7 @@ failed_nothing:
             }
 
             ret = send(sock, send_buf, IPERF_BUFSZ, 0);
-            if (ret > 0) 
+            if (ret > 0)
             {
                 sentlen += ret;
             }

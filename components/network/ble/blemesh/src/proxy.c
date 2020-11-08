@@ -601,31 +601,31 @@ struct net_buf_simple *bt_mesh_proxy_get_buf(void) {
 #if 0
 static void prov_ccc_changed(const struct bt_gatt_attr *attr, u16_t value)
 {
-	BT_DBG("value 0x%04x", value);
+    BT_DBG("value 0x%04x", value);
 }
 
 static bool prov_ccc_write(struct bt_conn *conn,
-			   const struct bt_gatt_attr *attr, u16_t value)
+               const struct bt_gatt_attr *attr, u16_t value)
 {
-	struct bt_mesh_proxy_client *client;
+    struct bt_mesh_proxy_client *client;
 
-	BT_DBG("value 0x%04x", value);
+    BT_DBG("value 0x%04x", value);
 
-	if (value != BT_GATT_CCC_NOTIFY) {
-		BT_WARN("Client wrote 0x%04x instead enabling notify", value);
-		return false;
-	}
+    if (value != BT_GATT_CCC_NOTIFY) {
+        BT_WARN("Client wrote 0x%04x instead enabling notify", value);
+        return false;
+    }
 
-	/* If a connection exists there must be a client */
-	client = find_client(conn);
-	__ASSERT(client, "No client for connection");
+    /* If a connection exists there must be a client */
+    client = find_client(conn);
+    __ASSERT(client, "No client for connection");
 
-	if (client->filter_type == NONE) {
-		client->filter_type = PROV;
-		bt_mesh_pb_gatt_open(conn);
-	}
+    if (client->filter_type == NONE) {
+        client->filter_type = PROV;
+        bt_mesh_pb_gatt_open(conn);
+    }
 
-	return true;
+    return true;
 }
 #else
 static ssize_t prov_ccc_write(struct bt_conn *conn,
@@ -678,7 +678,7 @@ static struct bt_gatt_attr prov_attrs[] = {
     BT_GATT_CHARACTERISTIC(BT_UUID_MESH_PROV_DATA_OUT, BT_GATT_CHRC_NOTIFY,
                            BT_GATT_PERM_NONE, NULL, NULL, NULL),
 #if 0
-	BT_GATT_CCC_MANAGED(prov_ccc_changed, prov_ccc_write, NULL),
+    BT_GATT_CCC_MANAGED(prov_ccc_changed, prov_ccc_write, NULL),
 #else
     /* Add custom CCC as clients need to be tracked individually */
     BT_GATT_DESCRIPTOR(BT_UUID_GATT_CCC, BT_GATT_PERM_WRITE | BT_GATT_PERM_READ,
@@ -756,31 +756,31 @@ int bt_mesh_proxy_prov_disable(bool disconnect) {
 #if 0
 static void proxy_ccc_changed(const struct bt_gatt_attr *attr, u16_t value)
 {
-	BT_DBG("value 0x%04x", value);
+    BT_DBG("value 0x%04x", value);
 }
 
 static bool proxy_ccc_write(struct bt_conn *conn,
-			    const struct bt_gatt_attr *attr, u16_t value)
+                const struct bt_gatt_attr *attr, u16_t value)
 {
-	struct bt_mesh_proxy_client *client;
+    struct bt_mesh_proxy_client *client;
 
-	BT_DBG("value: 0x%04x", value);
+    BT_DBG("value: 0x%04x", value);
 
-	if (value != BT_GATT_CCC_NOTIFY) {
-		BT_WARN("Client wrote 0x%04x instead enabling notify", value);
-		return false;
-	}
+    if (value != BT_GATT_CCC_NOTIFY) {
+        BT_WARN("Client wrote 0x%04x instead enabling notify", value);
+        return false;
+    }
 
-	/* If a connection exists there must be a client */
-	client = find_client(conn);
-	__ASSERT(client, "No client for connection");
+    /* If a connection exists there must be a client */
+    client = find_client(conn);
+    __ASSERT(client, "No client for connection");
 
-	if (client->filter_type == NONE) {
-		client->filter_type = WHITELIST;
-		k_work_submit(&client->send_beacons);
-	}
+    if (client->filter_type == NONE) {
+        client->filter_type = WHITELIST;
+        k_work_submit(&client->send_beacons);
+    }
 
-	return true;
+    return true;
 }
 #else
 static ssize_t proxy_ccc_write(struct bt_conn *conn,
@@ -833,7 +833,7 @@ static struct bt_gatt_attr proxy_attrs[] = {
     BT_GATT_CHARACTERISTIC(BT_UUID_MESH_PROXY_DATA_OUT, BT_GATT_CHRC_NOTIFY,
                            BT_GATT_PERM_NONE, NULL, NULL, NULL),
 #if 0
-	BT_GATT_CCC_MANAGED(proxy_ccc_changed, proxy_ccc_write, NULL),
+    BT_GATT_CCC_MANAGED(proxy_ccc_changed, proxy_ccc_write, NULL),
 #else
     /* Add custom CCC as clients need to be tracked individually */
     BT_GATT_DESCRIPTOR(BT_UUID_GATT_CCC, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE,

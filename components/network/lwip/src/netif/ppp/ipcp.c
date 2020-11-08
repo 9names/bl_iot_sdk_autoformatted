@@ -67,15 +67,15 @@
 
 #if 0  /* UNUSED */
 /* global vars */
-u32_t netmask = 0;		/* IP netmask to set on interface */
+u32_t netmask = 0;      /* IP netmask to set on interface */
 #endif /* UNUSED */
 
 #if 0  /* UNUSED */
-bool	disable_defaultip = 0;	/* Don't use hostname for default IP adrs */
+bool    disable_defaultip = 0;  /* Don't use hostname for default IP adrs */
 #endif /* UNUSED */
 
 #if 0  /* moved to ppp_settings */
-bool	noremoteip = 0;		/* Let him have no IP address */
+bool    noremoteip = 0;     /* Let him have no IP address */
 #endif /* moved to ppp_setting */
 
 #if 0  /* UNUSED */
@@ -97,15 +97,15 @@ struct notifier *ip_down_notifier = NULL;
 
 /* local vars */
 #if 0  /* moved to ppp_pcb */
-static int default_route_set[NUM_PPP];	/* Have set up a default route */
-static int proxy_arp_set[NUM_PPP];	/* Have created proxy arp entry */
-static int ipcp_is_up;			/* have called np_up() */
-static int ipcp_is_open;		/* haven't called np_finished() */
-static bool ask_for_local;		/* request our address from peer */
+static int default_route_set[NUM_PPP];  /* Have set up a default route */
+static int proxy_arp_set[NUM_PPP];  /* Have created proxy arp entry */
+static int ipcp_is_up;          /* have called np_up() */
+static int ipcp_is_open;        /* haven't called np_finished() */
+static bool ask_for_local;      /* request our address from peer */
 #endif /* moved to ppp_pcb */
 #if 0  /* UNUSED */
-static char vj_value[8];		/* string form of vj option value */
-static char netmask_str[20];		/* string form of netmask value */
+static char vj_value[8];        /* string form of vj option value */
+static char netmask_str[20];        /* string form of netmask value */
 #endif /* UNUSED */
 
 /*
@@ -697,10 +697,10 @@ static void ipcp_resetci(fsm *f) {
     go->ouraddr = 0;
 #if 0  /* UNUSED */
     if (ip_choose_hook) {
-	ip_choose_hook(&wo->hisaddr);
-	if (wo->hisaddr) {
-	    wo->accept_remote = 0;
-	}
+    ip_choose_hook(&wo->hisaddr);
+    if (wo->hisaddr) {
+        wo->accept_remote = 0;
+    }
     }
 #endif /* UNUSED */
   BZERO(&pcb->ipcp_hisoptions, sizeof(ipcp_options));
@@ -758,8 +758,8 @@ static int ipcp_cilen(fsm *f) {
           LENCIDNS(go->req_dns1) + LENCIDNS(go->req_dns2) +
 #endif /* LWIP_DNS */
 #if 0  /* UNUSED - WINS */
-	    LENCIWINS(go->winsaddr[0]) +
-	    LENCIWINS(go->winsaddr[1]) +
+        LENCIWINS(go->winsaddr[0]) +
+        LENCIWINS(go->winsaddr[1]) +
 #endif /* UNUSED - WINS */
           0);
 }
@@ -879,8 +879,8 @@ static void ipcp_addci(fsm *f, u_char *ucp, int *lenp) {
  * Called by fsm_rconfack, Receive Configure ACK.
  *
  * Returns:
- *	0 - Ack was bad.
- *	1 - Ack was good.
+ *  0 - Ack was bad.
+ *  1 - Ack was good.
  */
 static int ipcp_ackci(fsm *f, u_char *p, int len) {
   ppp_pcb *pcb = f->pcb;
@@ -1031,8 +1031,8 @@ bad:
  * Calback from fsm_rconfnakrej - Receive Configure-Nak or Configure-Reject.
  *
  * Returns:
- *	0 - Nak was bad.
- *	1 - Nak was good.
+ *  0 - Nak was bad.
+ *  1 - Nak was good.
  */
 static int ipcp_nakci(fsm *f, u_char *p, int len, int treat_as_reject) {
   ppp_pcb *pcb = f->pcb;
@@ -1245,15 +1245,15 @@ static int ipcp_nakci(fsm *f, u_char *p, int len, int treat_as_reject) {
       break;
 #endif /* LWIP_DNS */
 #if 0  /* UNUSED - WINS */
-	case CI_MS_WINS1:
-	case CI_MS_WINS2:
-	    if (cilen != CILEN_ADDR)
-		goto bad;
-	    GETLONG(l, p);
-	    ciaddr1 = lwip_htonl(l);
-	    if (ciaddr1)
-		try_.winsaddr[citype == CI_MS_WINS2] = ciaddr1;
-	    break;
+    case CI_MS_WINS1:
+    case CI_MS_WINS2:
+        if (cilen != CILEN_ADDR)
+        goto bad;
+        GETLONG(l, p);
+        ciaddr1 = lwip_htonl(l);
+        if (ciaddr1)
+        try_.winsaddr[citype == CI_MS_WINS2] = ciaddr1;
+        break;
 #endif /* UNUSED - WINS */
     default:
       break;
@@ -1593,23 +1593,23 @@ static int ipcp_reqci(fsm *f, u_char *inp, int *len, int reject_if_disagree) {
 #endif /* LWIP_DNS */
 
 #if 0  /* UNUSED - WINS */
-	case CI_MS_WINS1:
-	case CI_MS_WINS2:
-	    /* Microsoft primary or secondary WINS request */
-	    d = citype == CI_MS_WINS2;
+    case CI_MS_WINS1:
+    case CI_MS_WINS2:
+        /* Microsoft primary or secondary WINS request */
+        d = citype == CI_MS_WINS2;
 
-	    /* If we do not have a DNS address then we cannot send it */
-	    if (ao->winsaddr[d] == 0 ||
-		cilen != CILEN_ADDR) {	/* Check CI length */
-		orc = CONFREJ;		/* Reject CI */
-		break;
-	    }
-	    GETLONG(tl, p);
-	    if (lwip_htonl(tl) != ao->winsaddr[d]) {
+        /* If we do not have a DNS address then we cannot send it */
+        if (ao->winsaddr[d] == 0 ||
+        cilen != CILEN_ADDR) {  /* Check CI length */
+        orc = CONFREJ;      /* Reject CI */
+        break;
+        }
+        GETLONG(tl, p);
+        if (lwip_htonl(tl) != ao->winsaddr[d]) {
                 DECPTR(sizeof(u32_t), p);
-		tl = lwip_ntohl(ao->winsaddr[d]);
-		PUTLONG(tl, p);
-		orc = CONFNAK;
+        tl = lwip_ntohl(ao->winsaddr[d]);
+        PUTLONG(tl, p);
+        orc = CONFNAK;
             }
             break;
 #endif /* UNUSED - WINS */
@@ -1735,17 +1735,17 @@ ip_check_options()
      * If local IP address already given, don't bother.
      */
     if (wo->ouraddr == 0 && !disable_defaultip) {
-	/*
-	 * Look up our hostname (possibly with domain name appended)
-	 * and take the first IP address as our local IP address.
-	 * If there isn't an IP address for our hostname, too bad.
-	 */
-	wo->accept_local = 1;	/* don't insist on this default value */
-	if ((hp = gethostbyname(hostname)) != NULL) {
-	    local = *(u32_t *)hp->h_addr;
-	    if (local != 0 && !bad_ip_adrs(local))
-		wo->ouraddr = local;
-	}
+    /*
+     * Look up our hostname (possibly with domain name appended)
+     * and take the first IP address as our local IP address.
+     * If there isn't an IP address for our hostname, too bad.
+     */
+    wo->accept_local = 1;   /* don't insist on this default value */
+    if ((hp = gethostbyname(hostname)) != NULL) {
+        local = *(u32_t *)hp->h_addr;
+        if (local != 0 && !bad_ip_adrs(local))
+        wo->ouraddr = local;
+    }
     }
     ask_for_local = wo->ouraddr != 0 || !disable_defaultip;
 }
@@ -1780,14 +1780,14 @@ static int ip_demand_conf(u) int u;
     return 0;
 #if 0  /* UNUSED */
     if (wo->default_route)
-	if (sifdefaultroute(pcb, wo->ouraddr, wo->hisaddr,
-		wo->replace_default_route))
-	    default_route_set[u] = 1;
+    if (sifdefaultroute(pcb, wo->ouraddr, wo->hisaddr,
+        wo->replace_default_route))
+        default_route_set[u] = 1;
 #endif /* UNUSED */
 #if 0  /* UNUSED - PROXY ARP */
     if (wo->proxy_arp)
-	if (sifproxyarp(pcb, wo->hisaddr))
-	    proxy_arp_set[u] = 1;
+    if (sifproxyarp(pcb, wo->hisaddr))
+        proxy_arp_set[u] = 1;
 #endif /* UNUSED - PROXY ARP */
 
   ppp_notice("local  IP address %I", wo->ouraddr);
@@ -1837,7 +1837,7 @@ static void ipcp_up(fsm *f) {
 #if 0  /* UNUSED */
     script_setenv("IPLOCAL", ip_ntoa(go->ouraddr), 0);
     if (ho->hisaddr != 0)
-	script_setenv("IPREMOTE", ip_ntoa(ho->hisaddr), 1);
+    script_setenv("IPREMOTE", ip_ntoa(ho->hisaddr), 1);
 #endif /* UNUSED */
 
 #if LWIP_DNS
@@ -1847,15 +1847,15 @@ static void ipcp_up(fsm *f) {
     go->dnsaddr[1] = 0;
 #if 0  /* UNUSED */
     if (go->dnsaddr[0])
-	script_setenv("DNS1", ip_ntoa(go->dnsaddr[0]), 0);
+    script_setenv("DNS1", ip_ntoa(go->dnsaddr[0]), 0);
     if (go->dnsaddr[1])
-	script_setenv("DNS2", ip_ntoa(go->dnsaddr[1]), 0);
+    script_setenv("DNS2", ip_ntoa(go->dnsaddr[1]), 0);
 #endif /* UNUSED */
   if (pcb->settings.usepeerdns && (go->dnsaddr[0] || go->dnsaddr[1])) {
     sdns(pcb, go->dnsaddr[0], go->dnsaddr[1]);
 #if 0  /* UNUSED */
-	script_setenv("USEPEERDNS", "1", 0);
-	create_resolv(go->dnsaddr[0], go->dnsaddr[1]);
+    script_setenv("USEPEERDNS", "1", 0);
+    create_resolv(go->dnsaddr[0], go->dnsaddr[1]);
 #endif /* UNUSED */
   }
 #endif /* LWIP_DNS */
@@ -1884,9 +1884,9 @@ static void ipcp_up(fsm *f) {
 #if 0  /* Unused */
     /* Upstream checking code */
     if (ho->hisaddr != 0 && !auth_ip_addr(f->unit, ho->hisaddr)) {
-	ppp_error("Peer is not authorized to use remote address %I", ho->hisaddr);
-	ipcp_close(f->unit, "Unauthorized remote IP address");
-	return;
+    ppp_error("Peer is not authorized to use remote address %I", ho->hisaddr);
+    ipcp_close(f->unit, "Unauthorized remote IP address");
+    return;
     }
 #endif /* Unused */
 
@@ -1935,10 +1935,10 @@ static void ipcp_up(fsm *f) {
           default_route_set[f->unit] = 1;
 
 #if 0  /* UNUSED - PROXY ARP */
-	    /* Make a proxy ARP entry if requested. */
-	    if (ho->hisaddr != 0 && ipcp_wantoptions[f->unit].proxy_arp)
-		if (sifproxyarp(pcb, ho->hisaddr))
-		    proxy_arp_set[f->unit] = 1;
+        /* Make a proxy ARP entry if requested. */
+        if (ho->hisaddr != 0 && ipcp_wantoptions[f->unit].proxy_arp)
+        if (sifproxyarp(pcb, ho->hisaddr))
+            proxy_arp_set[f->unit] = 1;
 #endif /* UNUSED - PROXY ARP */
     }
     demand_rexmit(PPP_IP, go->ouraddr);
@@ -1985,18 +1985,18 @@ static void ipcp_up(fsm *f) {
 #endif /* DEMAND_SUPPORT */
 
 #if 0  /* UNUSED */
-	/* assign a default route through the interface if required */
-	if (wo->default_route)
-	    if (sifdefaultroute(pcb, go->ouraddr, ho->hisaddr,
-		    wo->replace_default_route))
-		    pcb->default_route_set = 1;
+    /* assign a default route through the interface if required */
+    if (wo->default_route)
+        if (sifdefaultroute(pcb, go->ouraddr, ho->hisaddr,
+            wo->replace_default_route))
+            pcb->default_route_set = 1;
 #endif /* UNUSED */
 
 #if 0  /* UNUSED - PROXY ARP */
-	/* Make a proxy ARP entry if requested. */
-	if (ho->hisaddr != 0 && wo->proxy_arp)
-	    if (sifproxyarp(pcb, ho->hisaddr))
-		pcb->proxy_arp_set = 1;
+    /* Make a proxy ARP entry if requested. */
+    if (ho->hisaddr != 0 && wo->proxy_arp)
+        if (sifproxyarp(pcb, ho->hisaddr))
+        pcb->proxy_arp_set = 1;
 #endif /* UNUSED - PROXY ARP */
 
     wo->ouraddr = go->ouraddr;
@@ -2024,7 +2024,7 @@ static void ipcp_up(fsm *f) {
 #endif /* PPP_NOTIFY */
 #if 0  /* UNUSED */
     if (ip_up_hook)
-	ip_up_hook();
+    ip_up_hook();
 #endif /* UNUSED */
 }
 
@@ -2052,7 +2052,7 @@ static void ipcp_down(fsm *f) {
 #endif /* PPP_NOTIFY */
 #if 0  /* UNUSED */
     if (ip_down_hook)
-	ip_down_hook();
+    ip_down_hook();
 #endif /* UNUSED */
   if (pcb->ipcp_is_up) {
     pcb->ipcp_is_up = 0;
@@ -2099,8 +2099,8 @@ static void ipcp_clear_addrs(ppp_pcb *pcb, u32_t ouraddr, u32_t hisaddr,
 
 #if 0  /* UNUSED - PROXY ARP */
     if (pcb->proxy_arp_set) {
-	cifproxyarp(pcb, hisaddr);
-	pcb->proxy_arp_set = 0;
+    cifproxyarp(pcb, hisaddr);
+    pcb->proxy_arp_set = 0;
     }
 #endif /* UNUSED - PROXY ARP */
 #if 0  /* UNUSED */
@@ -2113,8 +2113,8 @@ static void ipcp_clear_addrs(ppp_pcb *pcb, u32_t ouraddr, u32_t hisaddr,
      * is one saved by an sifdefaultroute with replacedefaultroute.
      */
     if (!replacedefaultroute && pcb->default_route_set) {
-	cifdefaultroute(pcb, ouraddr, hisaddr);
-	pcb->default_route_set = 0;
+    cifdefaultroute(pcb, ouraddr, hisaddr);
+    pcb->default_route_set = 0;
     }
 #endif /* UNUSED */
   cifaddr(pcb, ouraddr, hisaddr);
@@ -2238,12 +2238,12 @@ static int ipcp_printpkt(const u_char *p, int plen,
         break;
 #endif /* LWIP_DNS */
 #if 0  /* UNUSED - WINS */
-	    case CI_MS_WINS1:
-	    case CI_MS_WINS2:
-	        p += 2;
-		GETLONG(cilong, p);
-		printer(arg, "ms-wins %I", lwip_htonl(cilong));
-		break;
+        case CI_MS_WINS1:
+        case CI_MS_WINS2:
+            p += 2;
+        GETLONG(cilong, p);
+        printer(arg, "ms-wins %I", lwip_htonl(cilong));
+        break;
 #endif /* UNUSED - WINS */
       default:
         break;

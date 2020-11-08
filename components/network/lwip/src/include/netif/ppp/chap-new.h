@@ -179,9 +179,9 @@ typedef struct chap_server_state {
 #if 0  /* UNUSED */
 /* Hook for a plugin to validate CHAP challenge */
 extern int (*chap_verify_hook)(char *name, char *ourname, int id,
-			const struct chap_digest_type *digest,
-			unsigned char *challenge, unsigned char *response,
-			char *message, int message_space);
+            const struct chap_digest_type *digest,
+            unsigned char *challenge, unsigned char *response,
+            char *message, int message_space);
 #endif /* UNUSED */
 
 #if PPP_SERVER

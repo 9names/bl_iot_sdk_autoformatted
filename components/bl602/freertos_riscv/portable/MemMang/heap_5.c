@@ -47,9 +47,8 @@
  *
  * typedef struct HeapRegion
  * {
- *	uint8_t *pucStartAddress; << Start address of a block of memory that
- *will be part of the heap.
- *	size_t xSizeInBytes;	  << Size of the block of memory.
+ *  uint8_t *pucStartAddress; << Start address of a block of memory that will be
+ * part of the heap. size_t xSizeInBytes;      << Size of the block of memory.
  * } HeapRegion_t;
  *
  * The array is terminated using a NULL zero sized region definition, and the
@@ -59,14 +58,14 @@
  *
  * HeapRegion_t xHeapRegions[] =
  * {
- * 	{ ( uint8_t * ) 0x80000000UL, 0x10000 }, << Defines a block of 0x10000
- *bytes starting at address 0x80000000 { ( uint8_t * ) 0x90000000UL, 0xa0000 },
- *<< Defines a block of 0xa0000 bytes starting at address of 0x90000000 { NULL,
- *0 }                << Terminates the array.
+ *  { ( uint8_t * ) 0x80000000UL, 0x10000 }, << Defines a block of 0x10000 bytes
+ * starting at address 0x80000000 { ( uint8_t * ) 0x90000000UL, 0xa0000 }, <<
+ * Defines a block of 0xa0000 bytes starting at address of 0x90000000 { NULL, 0
+ * }                << Terminates the array.
  * };
  *
  * vPortDefineHeapRegions( xHeapRegions ); << Pass the array into
- *vPortDefineHeapRegions().
+ * vPortDefineHeapRegions().
  *
  * Note 0x80000000 is the lower address so appears in the array first.
  *
@@ -168,8 +167,8 @@ void *pvPortMalloc(size_t xWantedSize) {
       }
 
       if ((xWantedSize > 0) && (xWantedSize <= xFreeBytesRemaining)) {
-        /* Traverse the list from the start	(lowest address) block until
-        one	of adequate size is found. */
+        /* Traverse the list from the start (lowest address) block until
+        one of adequate size is found. */
         pxPreviousBlock = &xStart;
         pxBlock = xStart.pxNextFreeBlock;
         while ((pxBlock->xBlockSize < xWantedSize) &&
@@ -179,7 +178,7 @@ void *pvPortMalloc(size_t xWantedSize) {
         }
 
         /* If the end marker was reached then a block of adequate size
-        was	not found. */
+        was not found. */
         if (pxBlock != pxEnd) {
           /* Return the memory space pointed to - jumping over the
           BlockLink_t structure at its start. */

@@ -69,18 +69,18 @@ enum ieee80211_channel_flags {
  * @hw_value: hardware-specific value for the channel
  * @flags: channel flags from &enum ieee80211_channel_flags.
  * @orig_flags: channel flags at registration time, used by regulatory
- *	code to support devices with additional restrictions
+ *  code to support devices with additional restrictions
  * @band: band this channel belongs to.
  * @max_antenna_gain: maximum antenna gain in dBi
  * @max_power: maximum transmission power (in dBm)
  * @max_reg_power: maximum regulatory transmission power (in dBm)
  * @beacon_found: helper to regulatory code to indicate when a beacon
- *	has been found on this channel. Use regulatory_hint_found_beacon()
- *	to enable this, this is useful only on 5 GHz band.
+ *  has been found on this channel. Use regulatory_hint_found_beacon()
+ *  to enable this, this is useful only on 5 GHz band.
  * @orig_mag: internal use
  * @orig_mpwr: internal use
  * @dfs_state: current state of this channel. Only relevant if radar is required
- *	on this channel.
+ *  on this channel.
  * @dfs_state_entered: timestamp (jiffies) when the dfs state was entered.
  * @dfs_cac_ms: DFS CAC time in milliseconds, this is valid for DFS channels.
  */
@@ -135,43 +135,43 @@ struct ieee80211_sta_ht_cap {
  * enum wiphy_flags - wiphy capability flags
  *
  * @WIPHY_FLAG_NETNS_OK: if not set, do not allow changing the netns of this
- *	wiphy at all
+ *  wiphy at all
  * @WIPHY_FLAG_PS_ON_BY_DEFAULT: if set to true, powersave will be enabled
- *	by default -- this flag will be set depending on the kernel's default
- *	on wiphy_new(), but can be changed by the driver if it has a good
- *	reason to override the default
+ *  by default -- this flag will be set depending on the kernel's default
+ *  on wiphy_new(), but can be changed by the driver if it has a good
+ *  reason to override the default
  * @WIPHY_FLAG_4ADDR_AP: supports 4addr mode even on AP (with a single station
- *	on a VLAN interface)
+ *  on a VLAN interface)
  * @WIPHY_FLAG_4ADDR_STATION: supports 4addr mode even as a station
  * @WIPHY_FLAG_CONTROL_PORT_PROTOCOL: This device supports setting the
- *	control port protocol ethertype. The device also honours the
- *	control_port_no_encrypt flag.
+ *  control port protocol ethertype. The device also honours the
+ *  control_port_no_encrypt flag.
  * @WIPHY_FLAG_IBSS_RSN: The device supports IBSS RSN.
  * @WIPHY_FLAG_MESH_AUTH: The device supports mesh authentication by routing
- *	auth frames to userspace. See @NL80211_MESH_SETUP_USERSPACE_AUTH.
+ *  auth frames to userspace. See @NL80211_MESH_SETUP_USERSPACE_AUTH.
  * @WIPHY_FLAG_SUPPORTS_SCHED_SCAN: The device supports scheduled scans.
  * @WIPHY_FLAG_SUPPORTS_FW_ROAM: The device supports roaming feature in the
- *	firmware.
+ *  firmware.
  * @WIPHY_FLAG_AP_UAPSD: The device supports uapsd on AP.
  * @WIPHY_FLAG_SUPPORTS_TDLS: The device supports TDLS (802.11z) operation.
  * @WIPHY_FLAG_TDLS_EXTERNAL_SETUP: The device does not handle TDLS (802.11z)
- *	link setup/discovery operations internally. Setup, discovery and
- *	teardown packets should be sent through the @NL80211_CMD_TDLS_MGMT
- *	command. When this flag is not set, @NL80211_CMD_TDLS_OPER should be
- *	used for asking the driver/firmware to perform a TDLS operation.
+ *  link setup/discovery operations internally. Setup, discovery and
+ *  teardown packets should be sent through the @NL80211_CMD_TDLS_MGMT
+ *  command. When this flag is not set, @NL80211_CMD_TDLS_OPER should be
+ *  used for asking the driver/firmware to perform a TDLS operation.
  * @WIPHY_FLAG_HAVE_AP_SME: device integrates AP SME
  * @WIPHY_FLAG_REPORTS_OBSS: the device will report beacons from other BSSes
- *	when there are virtual interfaces in AP mode by calling
- *	cfg80211_report_obss_beacon().
+ *  when there are virtual interfaces in AP mode by calling
+ *  cfg80211_report_obss_beacon().
  * @WIPHY_FLAG_AP_PROBE_RESP_OFFLOAD: When operating as an AP, the device
- *	responds to probe-requests in hardware.
+ *  responds to probe-requests in hardware.
  * @WIPHY_FLAG_OFFCHAN_TX: Device supports direct off-channel TX.
  * @WIPHY_FLAG_HAS_REMAIN_ON_CHANNEL: Device supports remain-on-channel call.
  * @WIPHY_FLAG_SUPPORTS_5_10_MHZ: Device supports 5 MHz and 10 MHz channels.
  * @WIPHY_FLAG_HAS_CHANNEL_SWITCH: Device supports channel switch in
- *	beaconing mode (AP, IBSS, Mesh, ...).
+ *  beaconing mode (AP, IBSS, Mesh, ...).
  * @WIPHY_FLAG_HAS_STATIC_WEP: The device supports static WEP key installation
- *	before connection.
+ *  before connection.
  */
 enum wiphy_flags {
   /* use hole at 0 */
@@ -209,8 +209,8 @@ enum wiphy_flags {
  * @key_len: length of key material
  * @cipher: cipher suite selector
  * @seq: sequence counter (IV/PN) for TKIP and CCMP keys, only used
- *	with the get_key() callback, must be in little endian,
- *	length given by @seq_len.
+ *  with the get_key() callback, must be in little endian,
+ *  length given by @seq_len.
  * @seq_len: length of @seq.
  */
 struct key_params {
@@ -224,22 +224,22 @@ struct key_params {
 /**
  * struct cfg80211_crypto_settings - Crypto settings
  * @wpa_versions: indicates which, if any, WPA versions are enabled
- *	(from enum nl80211_wpa_versions)
+ *  (from enum nl80211_wpa_versions)
  * @cipher_group: group key cipher suite (or 0 if unset)
  * @n_ciphers_pairwise: number of AP supported unicast ciphers
  * @ciphers_pairwise: unicast key cipher suites
  * @n_akm_suites: number of AKM suites
  * @akm_suites: AKM suites
  * @control_port: Whether user space controls IEEE 802.1X port, i.e.,
- *	sets/clears %NL80211_STA_FLAG_AUTHORIZED. If true, the driver is
- *	required to assume that the port is unauthorized until authorized by
- *	user space. Otherwise, port is marked authorized by default.
+ *  sets/clears %NL80211_STA_FLAG_AUTHORIZED. If true, the driver is
+ *  required to assume that the port is unauthorized until authorized by
+ *  user space. Otherwise, port is marked authorized by default.
  * @control_port_ethertype: the control port protocol that should be
- *	allowed through even on unauthorized ports
+ *  allowed through even on unauthorized ports
  * @control_port_no_encrypt: TRUE to prevent encryption of control port
- *	protocol frames.
+ *  protocol frames.
  * @wep_keys: static WEP keys, if not NULL points to an array of
- *	CFG80211_MAX_WEP_KEYS WEP keys
+ *  CFG80211_MAX_WEP_KEYS WEP keys
  * @wep_tx_key: key index (0..3) of the default TX static WEP key
  */
 struct cfg80211_crypto_settings {
@@ -290,15 +290,15 @@ struct cfg80211_bss_selection {
  * authentication and association.
  *
  * @channel: The channel to use or %NULL if not specified (auto-select based
- *	on scan results)
+ *  on scan results)
  * @channel_hint: The channel of the recommended BSS for initial connection or
- *	%NULL if not specified
+ *  %NULL if not specified
  * @bssid: The AP BSSID or %NULL if not specified (auto-select based on scan
- *	results)
+ *  results)
  * @bssid_hint: The recommended AP BSSID for initial connection to the BSS or
- *	%NULL if not specified. Unlike the @bssid parameter, the driver is
- *	allowed to ignore this @bssid_hint if it has knowledge of a better BSS
- *	to use.
+ *  %NULL if not specified. Unlike the @bssid parameter, the driver is
+ *  allowed to ignore this @bssid_hint if it has knowledge of a better BSS
+ *  to use.
  * @ssid: SSID
  * @ssid_len: Length of ssid in octets
  * @auth_type: Authentication type (algorithm)
@@ -312,21 +312,21 @@ struct cfg80211_bss_selection {
  * @key: WEP key for shared key authentication
  * @flags:  See &enum cfg80211_assoc_req_flags
  * @bg_scan_period:  Background scan period in seconds
- *	or -1 to indicate that default value is to be used.
+ *  or -1 to indicate that default value is to be used.
  * @ht_capa:  HT Capabilities over-rides.  Values set in ht_capa_mask
- *	will be used in ht_capa.  Un-supported values will be ignored.
+ *  will be used in ht_capa.  Un-supported values will be ignored.
  * @ht_capa_mask:  The bits of ht_capa which are to be used.
  * @vht_capa:  VHT Capability overrides
  * @vht_capa_mask: The bits of vht_capa which are to be used.
  * @pbss: if set, connect to a PCP instead of AP. Valid for DMG
- *	networks.
+ *  networks.
  * @bss_select: criteria to be used for BSS selection.
  * @prev_bssid: previous BSSID, if not %NULL use reassociate frame. This is used
- *	to indicate a request to reassociate within the ESS instead of a request
- *	do the initial association with the ESS. When included, this is set to
- *	the BSSID of the current association, i.e., to the value that is
- *	included in the Current AP address field of the Reassociation Request
- *	frame.
+ *  to indicate a request to reassociate within the ESS instead of a request
+ *  do the initial association with the ESS. When included, this is set to
+ *  the BSSID of the current association, i.e., to the value that is
+ *  included in the Current AP address field of the Reassociation Request
+ *  frame.
  */
 struct cfg80211_connect_params {
   struct ieee80211_channel channel;

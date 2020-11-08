@@ -260,10 +260,10 @@ extern u8_t bundle_terminating;
 #ifdef MAXOCTETS
 extern unsigned int maxoctets; /* Maximum octetes per session (in bytes) */
 extern int maxoctets_dir;      /* Direction :
-                                0 - in+out (default)
-                                1 - in
-                                2 - out
-                                3 - max(in,out) */
+                0 - in+out (default)
+                1 - in
+                2 - out
+                3 - max(in,out) */
 extern int maxoctets_timeout;  /* Timeout for check of octets limit */
 #define PPP_OCTETS_DIRECTION_SUM 0
 #define PPP_OCTETS_DIRECTION_IN 1

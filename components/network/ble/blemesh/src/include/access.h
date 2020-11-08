@@ -302,7 +302,7 @@ struct bt_mesh_model_pub {
    *  This will get correctly created when the publication context
    *  has been defined using the BT_MESH_MODEL_PUB_DEFINE macro.
    *
-   *	BT_MESH_MODEL_PUB_DEFINE(name, update, size);
+   *  BT_MESH_MODEL_PUB_DEFINE(name, update, size);
    */
   struct net_buf_simple *msg;
 

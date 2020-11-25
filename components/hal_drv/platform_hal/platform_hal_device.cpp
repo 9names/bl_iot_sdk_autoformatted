@@ -32,22 +32,22 @@
 #include <stdio.h>
 
 extern "C" void *operator new(size_t size) {
-  printf("[C++] new %d\r\n", size);
+  /* printf("[C++] new %d\r\n", size); */
   return pvPortMalloc(size);
 }
 
 extern "C" void *operator new[](size_t size) {
-  printf("[C++] new[] %d\r\n", size);
+  /* printf("[C++] new[] %d\r\n", size); */
   return pvPortMalloc(size);
 }
 
 extern "C" void operator delete(void *ptr) {
-  printf("[C++] delete %p\r\n", ptr);
+  /* printf("[C++] delete %p\r\n", ptr); */
   vPortFree(ptr);
 }
 
 extern "C" void operator delete[](void *ptr) {
-  printf("[C++] delete[] %p\r\n", ptr);
+  /* printf("[C++] delete[] %p\r\n", ptr); */
   vPortFree(ptr);
 }
 
@@ -222,6 +222,7 @@ extern "C" int platform_hal_device_init(void) {
   class BLAesRequest *aes_request = new BLAesRequest[6];
   aes_engine = new BLAesEngine();
 
+  (void)aes_request;
 #if 0
     aes_engine->encryption(aes_request[0]);
 #endif

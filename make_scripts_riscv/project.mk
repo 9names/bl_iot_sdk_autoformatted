@@ -261,7 +261,7 @@ CPPFLAGS += -D BL_CHIP_NAME=\"$(BL_CHIP_NAME)\" -MMD -MP $(CPPFLAGS) $(EXTRA_CPP
 CPPFLAGS += -DARCH_RISCV
 
 # Warnings-related flags relevant both for C and C++
-COMMON_WARNING_FLAGS = -Wall \
+COMMON_WARNING_FLAGS = -Wall -Werror=all \
 	-Wno-error=unused-function \
 	-Wno-error=unused-but-set-variable \
 	-Wno-error=unused-variable \
@@ -341,11 +341,8 @@ CFLAGS := $(strip \
 	-save-temps=obj
 
 CXXFLAGS := $(strip \
-	-std=c++11 \
-	$(OPTIMIZATION_FLAGS) $(DEBUG_FLAGS) \
-	$(COMMON_FLAGS) \
-	$(COMMON_WARNING_FLAGS) \
-	$(CXXFLAGS) \
+	$(CPPFLAGS) \
+	$(OPTIMIZATION_FLAGS) \
 	$(E21_CPU_CFLAGS) \
 	-nostdlib \
 	-g3 \
@@ -360,9 +357,7 @@ CXXFLAGS := $(strip \
 	-Wswitch-default \
 	-Wunused \
 	-Wundef \
-	-fno-rtti -fno-exceptions \
-	-save-temps=obj \
-	)
+	-fno-rtti -fno-exceptions)
 
 export CFLAGS CPPFLAGS CXXFLAGS ASMFLAGS
 

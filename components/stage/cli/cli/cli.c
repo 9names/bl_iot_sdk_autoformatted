@@ -976,11 +976,11 @@ static int cb_idnoe(void *arg, inode_t *node) {
            "---------------\r\n");
   }
   printf("%10d\t\t%30s\t\t\t%s\r\n",
-         INODE_IS_CHAR(node)
-             ? sizeof(struct file_ops)
-             : (INODE_IS_BLOCK(node)
-                    ? sizeof(struct file_ops)
-                    : (INODE_IS_FS(node) ? sizeof(struct fs_ops) : 0)),
+         (int)(INODE_IS_CHAR(node)
+                   ? sizeof(struct file_ops)
+                   : (INODE_IS_BLOCK(node)
+                          ? sizeof(struct file_ops)
+                          : (INODE_IS_FS(node) ? sizeof(struct fs_ops) : 0))),
          node->i_name,
          INODE_IS_CHAR(node)
              ? "Char Device"
@@ -1098,7 +1098,7 @@ static void hexdump_cmd(char *buf, int len, int argc, char **argv) {
   memset(&filebuf, 0, sizeof(filebuf));
   aos_ioctl(fd, IOCTL_ROMFS_GET_FILEBUF, (long unsigned int)&filebuf);
   printf("Found file %s. XIP Addr %p, len %lu\r\n", argv[1], filebuf.buf,
-         filebuf.bufsize);
+         (unsigned long)filebuf.bufsize);
   utils_hexdump(filebuf.buf, filebuf.bufsize);
   aos_close(fd);
 }
@@ -1288,7 +1288,7 @@ init_general_err:
 }
 
 static void console_cb_read(int fd, void *param) {
-  char buffer[16];
+  char buffer[64]; /* adapt to usb cdc since usb fifo is 64 bytes */
   int ret;
 
   ret = aos_read(fd, buffer, sizeof(buffer));

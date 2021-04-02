@@ -171,7 +171,7 @@
  * TCPIP thread. It is a common error to call these from other threads
  * or from IRQ contexts. ​Ethernet RX needs to deliver incoming packets
  * in the correct way by sending a message to TCPIP thread, this is
- * implemented in tcpip_input().
+ * implemented in tcpip_input().​​
  * Again, ensure lwIP is _NEVER_ called from an interrupt, e.g.
  * some SPI IRQ wants to forward data to udp_send() or tcp_write()!
  *

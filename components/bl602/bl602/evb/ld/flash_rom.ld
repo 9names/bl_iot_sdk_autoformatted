@@ -3,6 +3,10 @@ OUTPUT_ARCH( "riscv" )
 ENTRY( bl602_start )
 
 __EM_SIZE = DEFINED(ble_controller_init) ? 8K : 0K;
+__RFTLV_SIZE_OFFSET = 1K;
+__RFTLV_SIZE_HOLE = 2K;
+__RFTLV_HEAD1_H = (0x46524C42); /* BLRF */
+__RFTLV_HEAD1_L = (0x41524150); /* PAPA */
 
 MEMORY
 {
@@ -21,6 +25,17 @@ SECTIONS
   .init           :
   {
     KEEP (*(SORT_NONE(.init)))
+  } > flash
+
+  /* value for rftlv */
+
+  .rftlv.tool :
+  {
+      . = ORIGIN(flash) + __RFTLV_SIZE_OFFSET;
+      PROVIDE( _ld_symbol_rftlv_address = . );
+      LONG(__RFTLV_HEAD1_H);
+      LONG(__RFTLV_HEAD1_L);
+      . = ORIGIN(flash) + __RFTLV_SIZE_OFFSET + __RFTLV_SIZE_HOLE;
   } > flash
 
   .text           :
@@ -192,17 +207,16 @@ SECTIONS
     *(COMMON)
   } > ram_tcm
 
-  PROVIDE( _heap_start = . );
-  PROVIDE( _heap_size = ADDR(.stack) - _heap_start );
-
-
-  .stack ORIGIN(ram_tcm) + LENGTH(ram_tcm) - __stack_size (NOLOAD) :
+  .stack (NOLOAD)   :
   {
+    . = ALIGN(16);
     . = . + __stack_size;
     PROVIDE( _sp_main = . );
     __freertos_irq_stack_top = .;
-  } >ram_tcm
+  }
 
+  PROVIDE( _heap_start = . );
+  PROVIDE( _heap_size = ORIGIN(ram_tcm) + LENGTH(ram_tcm) - _heap_start );
 
   /*SYMOBOL used in code*/
   PROVIDE( _ld_bl_static_cli_cmds_start = _bl_static_cli_cmds_start );

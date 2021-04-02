@@ -31,6 +31,8 @@
 
 #define LWIP_TIMEVAL_PRIVATE 0
 
+#define LWIP_HAVE_LOOPIF 1
+
 /**
  * LWIP_TCPIP_CORE_LOCKING_INPUT: when LWIP_TCPIP_CORE_LOCKING is enabled,
  * this lets tcpip_input() grab the mutex for input packets as well,
@@ -76,7 +78,9 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* ---------- Pbuf options ---------- */
 /* PBUF_POOL_SIZE: the number of buffers in the pbuf pool. */
+#if !defined PBUF_POOL_SIZE
 #define PBUF_POOL_SIZE 0
+#endif
 
 /* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
 #define PBUF_POOL_BUFSIZE 760
@@ -90,15 +94,16 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_QUEUE_OOSEQ 1
 
 /* TCP Maximum segment size. */
-//#define TCP_MSS                 (1500 - 40)     /* TCP_MSS = (Ethernet MTU -
-//IP header size - TCP header size) */ #define TCP_MSS                 (1500 -
-//80)     /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size) */
 #define TCP_MSS                                                                \
-  (800 - 40 - 80 +                                                             \
-   8) /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size) */
+  (1500 - 40) /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size)   \
+               */
+//#define TCP_MSS                 (1500 - 80)	  /* TCP_MSS = (Ethernet MTU -
+//IP header size - TCP header size) */ #define TCP_MSS                 (800 - 40
+//- 80 + 8)	  /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size)
+//*/
 
 /* TCP sender buffer space (bytes). */
-#define TCP_SND_BUF (8 * TCP_MSS)
+#define TCP_SND_BUF (3 * TCP_MSS)
 
 /*  TCP_SND_QUEUELEN: TCP sender buffer space (pbufs). This must be at least
   as much as (2 * TCP_SND_BUF/TCP_MSS) for things to work. */
@@ -250,7 +255,7 @@ a lot of data that needs to be copied, this should be set high. */
 */
 
 #define TCPIP_THREAD_NAME "TCP/IP"
-#define TCPIP_THREAD_STACKSIZE 4000
+#define TCPIP_THREAD_STACKSIZE 1000
 #define TCPIP_MBOX_SIZE 50
 #define DEFAULT_UDP_RECVMBOX_SIZE 2000
 #define DEFAULT_TCP_RECVMBOX_SIZE 2000

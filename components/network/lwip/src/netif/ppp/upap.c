@@ -416,16 +416,16 @@ static void upap_rauthreq(ppp_pcb *pcb, u_char *inp, int id, int len) {
      * return an authenticate failure, is leaving it for us to verify.
      */
     if (retcode == UPAP_AUTHACK) {
-    if (!auth_number()) {
-        /* We do not want to leak info about the pap result. */
-        retcode = UPAP_AUTHNAK; /* XXX exit value will be "wrong" */
-        warn("calling number %q is not authorized", remote_number);
-    }
+	if (!auth_number()) {
+	    /* We do not want to leak info about the pap result. */
+	    retcode = UPAP_AUTHNAK; /* XXX exit value will be "wrong" */
+	    warn("calling number %q is not authorized", remote_number);
+	}
     }
 
     msglen = strlen(msg);
     if (msglen > 255)
-    msglen = 255;
+	msglen = 255;
 #endif /* UNUSED */
 
   upap_sresp(pcb, retcode, id, msg, msglen);
@@ -634,12 +634,12 @@ static int upap_printpkt(const u_char *p, int plen,
     printer(arg, " password=");
 /* FIXME: require ppp_pcb struct as printpkt() argument */
 #if 0
-    if (!pcb->settings.hide_password)
+	if (!pcb->settings.hide_password)
 #endif
     ppp_print_string(pwd, wlen, printer, arg);
 #if 0
-    else
-        printer(arg, "<hidden>");
+	else
+	    printer(arg, "<hidden>");
 #endif
     break;
   case UPAP_AUTHACK:

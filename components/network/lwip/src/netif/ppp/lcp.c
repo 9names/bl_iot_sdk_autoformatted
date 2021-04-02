@@ -76,8 +76,8 @@ static void lcp_delayed_up(void *arg);
  * LCP-related command-line options.
  */
 #if 0  /* UNUSED */
-int lcp_echo_interval = 0;  /* Interval between LCP echo-requests */
-int lcp_echo_fails = 0; /* Tolerance to unanswered echo-requests */
+int	lcp_echo_interval = 0; 	/* Interval between LCP echo-requests */
+int	lcp_echo_fails = 0;	/* Tolerance to unanswered echo-requests */
 #endif /* UNUSED */
 
 #if 0  /* UNUSED */
@@ -88,10 +88,10 @@ static u_int lcp_echo_fails         = LCP_MAXECHOFAILS; /* Tolerance to unanswer
 
 #if 0 /* UNUSED */
 #if PPP_LCP_ADAPTIVE
-bool    lcp_echo_adaptive = 0;  /* request echo only if the link was idle */
+bool	lcp_echo_adaptive = 0;	/* request echo only if the link was idle */
 #endif
-bool    lax_recv = 0;       /* accept control chars in asyncmap */
-bool    noendpoint = 0;     /* don't send/accept endpoint discriminator */
+bool	lax_recv = 0;		/* accept control chars in asyncmap */
+bool	noendpoint = 0;		/* don't send/accept endpoint discriminator */
 #endif /* UNUSED */
 
 #if PPP_OPTIONS
@@ -922,8 +922,8 @@ static void lcp_addci(fsm *f, u_char *ucp, int *lenp) {
  * This should not modify any state if the Ack is bad.
  *
  * Returns:
- *  0 - Ack was bad.
- *  1 - Ack was good.
+ *	0 - Ack was bad.
+ *	1 - Ack was good.
  */
 static int lcp_ackci(fsm *f, u_char *p, int len) {
   ppp_pcb *pcb = f->pcb;
@@ -1097,8 +1097,8 @@ bad:
  * or if LCP is in the OPENED state.
  *
  * Returns:
- *  0 - Nak was bad.
- *  1 - Nak was good.
+ *	0 - Nak was bad.
+ *	1 - Nak was good.
  */
 static int lcp_nakci(fsm *f, u_char *p, int len, int treat_as_reject) {
   ppp_pcb *pcb = f->pcb;
@@ -1523,8 +1523,8 @@ bad:
  * or if LCP is in the OPENED state.
  *
  * Returns:
- *  0 - Reject was bad.
- *  1 - Reject was good.
+ *	0 - Reject was bad.
+ *	1 - Reject was good.
  */
 static int lcp_rejci(fsm *f, u_char *p, int len) {
   ppp_pcb *pcb = f->pcb;

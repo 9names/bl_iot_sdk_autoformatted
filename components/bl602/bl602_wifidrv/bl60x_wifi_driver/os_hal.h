@@ -164,13 +164,15 @@ typedef SemaphoreHandle_t os_mutex_t;
                 &xHandle); /* Used to pass out the created task's handle. */   \
   } while (0)
 /*message queue related*/
-typedef StaticMessageBuffer_t os_messagequeue_t;
+typedef StaticQueue_t os_messagequeue_t;
 #define os_mq_init(mq, name, buffer, msgsize, buffersize)                      \
-  (NULL != xMessageBufferCreateStatic(buffersize, buffer, mq) ? 0 : 1)
+  (NULL != xQueueCreateStatic((buffersize) / (msgsize), msgsize, buffer, mq)   \
+       ? 0                                                                     \
+       : 1)
 #define os_mq_send(mq, msg, len)                                               \
-  (xMessageBufferSend(mq, msg, len, portMAX_DELAY) > 0 ? 0 : 1)
+  (xQueueSend((QueueHandle_t)mq, msg, portMAX_DELAY) > 0 ? 0 : 1)
 #define os_mq_recv(mq, msg, len)                                               \
-  (xMessageBufferReceive(mq, msg, len, portMAX_DELAY) > 0 ? 0 : 1)
+  (xQueueReceive((QueueHandle_t)mq, msg, portMAX_DELAY) > 0 ? 0 : 1)
 /*timer related*/
 typedef StaticTimer_t os_timer_t;
 #define OS_TIMER_TYPE_ONESHOT pdFALSE

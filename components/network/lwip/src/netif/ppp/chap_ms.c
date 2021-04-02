@@ -513,7 +513,7 @@ static void ChallengeResponse(const u_char *challenge,
 
 #if 0
     dbglog("ChallengeResponse - ZPasswordHash %.*B",
-       sizeof(ZPasswordHash), ZPasswordHash);
+	   sizeof(ZPasswordHash), ZPasswordHash);
 #endif
 
   pppcrypt_56_to_64_bit_key(ZPasswordHash + 0, des_key);
@@ -916,26 +916,26 @@ static void ChapMS2(ppp_pcb *pcb, const u_char *rchallenge,
 void set_mppe_enc_types(int policy, int types) {
     /* Early exit for unknown policies. */
     if (policy != MPPE_ENC_POL_ENC_ALLOWED ||
-    policy != MPPE_ENC_POL_ENC_REQUIRED)
-    return;
+	policy != MPPE_ENC_POL_ENC_REQUIRED)
+	return;
 
     /* Don't modify MPPE if it's optional and wasn't already configured. */
     if (policy == MPPE_ENC_POL_ENC_ALLOWED && !ccp_wantoptions[0].mppe)
-    return;
+	return;
 
     /*
      * Disable undesirable encryption types.  Note that we don't ENABLE
      * any encryption types, to avoid overriding manual configuration.
      */
     switch(types) {
-    case MPPE_ENC_TYPES_RC4_40:
-        ccp_wantoptions[0].mppe &= ~MPPE_OPT_128;   /* disable 128-bit */
-        break;
-    case MPPE_ENC_TYPES_RC4_128:
-        ccp_wantoptions[0].mppe &= ~MPPE_OPT_40;    /* disable 40-bit */
-        break;
-    default:
-        break;
+	case MPPE_ENC_TYPES_RC4_40:
+	    ccp_wantoptions[0].mppe &= ~MPPE_OPT_128;	/* disable 128-bit */
+	    break;
+	case MPPE_ENC_TYPES_RC4_128:
+	    ccp_wantoptions[0].mppe &= ~MPPE_OPT_40;	/* disable 40-bit */
+	    break;
+	default:
+	    break;
     }
 }
 #endif /* MPPE_SUPPORT */

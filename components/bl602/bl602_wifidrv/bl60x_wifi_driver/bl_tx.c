@@ -29,6 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <blog.h>
 #include <netif/etharp.h>
 #include <stdio.h>
 #include <string.h>
@@ -64,7 +65,9 @@ void bl_tx_push(struct bl_hw *bl_hw, struct bl_txhdr *txhdr) {
   }
 
   ipc_host_txdesc_push(bl_hw->ipc_env, p);
+#ifdef CFG_BL_STATISTIC
   bl_hw->stats.cfm_balance++;
+#endif
 }
 
 #define TXHDR_HODLER_LEN (8)
@@ -126,15 +129,11 @@ int bl_txdatacfm(void *pthis, void *host_id) {
     /*we don't pbuf_free here, because we will resend this packet*/
     if (((txhdr_pos_w + 1) & TXHDR_HODLER_MSK) !=
         (txhdr_pos_r & TXHDR_HODLER_MSK)) {
-#if 1
-      puts(" push back\r\n");
-#endif
+      blog_warn(" push back\r\n");
       txhdr_hodler[txhdr_pos_w & TXHDR_HODLER_MSK] = txhdr;
       txhdr_pos_w++;
     } else {
-#if 1
-      puts(" NOT push back when no mem\r\n");
-#endif
+      blog_warn(" NOT push back when no mem\r\n");
       pbuf_free(p);
     }
   } else {
@@ -164,6 +163,7 @@ err_t bl_output(struct bl_hw *bl_hw, struct netif *netif, struct pbuf *p,
   int loop = 0;
   u8 tid;
   uint16_t packet_len;
+  struct bl_sta *sta;
 
   if (NULL == bl_hw ||
       0 == (NETIF_FLAG_LINK_UP &
@@ -210,15 +210,23 @@ err_t bl_output(struct bl_hw *bl_hw, struct netif *netif, struct pbuf *p,
   memcpy(&host->eth_src_addr, eth->h_source, ETH_ALEN);
   host->pbuf_addr = (uint32_t)p;
   host->ethertype = eth->h_proto;
-  host->tid = tid;
   host->vif_idx = (is_sta ? bl_hw->vif_index_sta : bl_hw->vif_index_ap);
   host->flags = 0;
   host->packet_len = packet_len - sizeof(*eth);
   if (is_sta) {
     host->staid = bl_hw->sta_idx;
+    sta = &(bl_hw->sta_table[bl_hw->sta_idx]);
+    if (sta->qos) {
+      tid = 0; // XXX set TID to 0 for quick test purpose
+    } else {
+      tid = 0xFF;
+    }
+
   } else {
+    // AP mode need update whether support qos
     host->staid = bl_utils_idx_lookup(bl_hw, eth->h_dest);
   }
+  host->tid = tid;
 
   loop = 0;
   for (q = p; q != NULL; q = q->next) {

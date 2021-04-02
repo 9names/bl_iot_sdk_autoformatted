@@ -174,8 +174,8 @@ void fsm_open(fsm *f) {
 
   case PPP_FSM_CLOSING:
     f->state = PPP_FSM_STOPPING;
-  /* fall through */
-  /* no break */
+    /* fall through */
+    /* no break */
   case PPP_FSM_STOPPED:
   case PPP_FSM_OPENED:
     if (f->flags & OPT_RESTART) {
@@ -657,8 +657,8 @@ void fsm_protreject(fsm *f) {
   switch (f->state) {
   case PPP_FSM_CLOSING:
     UNTIMEOUT(fsm_timeout, f); /* Cancel timeout */
-  /* fall through */
-  /* no break */
+                               /* fall through */
+                               /* no break */
   case PPP_FSM_CLOSED:
     f->state = PPP_FSM_CLOSED;
     if (f->callbacks->finished)
@@ -670,8 +670,8 @@ void fsm_protreject(fsm *f) {
   case PPP_FSM_ACKRCVD:
   case PPP_FSM_ACKSENT:
     UNTIMEOUT(fsm_timeout, f); /* Cancel timeout */
-  /* fall through */
-  /* no break */
+                               /* fall through */
+                               /* no break */
   case PPP_FSM_STOPPED:
     f->state = PPP_FSM_STOPPED;
     if (f->callbacks->finished)

@@ -45,9 +45,13 @@ struct tx_meta {
 
 #define tx_data(buf) ((struct tx_meta *)net_buf_user_data(buf))
 
+#if !defined(BFLB_DYNAMIC_ALLOC_MEM)
 NET_BUF_POOL_DEFINE(acl_tx_pool, CONFIG_BT_L2CAP_TX_BUF_COUNT,
                     BT_L2CAP_BUF_SIZE(CONFIG_BT_L2CAP_TX_MTU),
                     sizeof(struct tx_meta), NULL);
+#else
+struct net_buf_pool acl_tx_pool;
+#endif
 
 #if CONFIG_BT_L2CAP_TX_FRAG_COUNT > 0
 
@@ -57,6 +61,7 @@ NET_BUF_POOL_DEFINE(acl_tx_pool, CONFIG_BT_L2CAP_TX_BUF_COUNT,
 #define FRAG_SIZE BT_L2CAP_BUF_SIZE(CONFIG_BT_L2CAP_TX_MTU)
 #endif
 
+#if !defined(BFLB_DYNAMIC_ALLOC_MEM)
 /* Dedicated pool for fragment buffers in case queued up TX buffers don't
  * fit the controllers buffer size. We can't use the acl_tx_pool for the
  * fragmentation, since it's possible that pool is empty and all buffers
@@ -65,7 +70,9 @@ NET_BUF_POOL_DEFINE(acl_tx_pool, CONFIG_BT_L2CAP_TX_BUF_COUNT,
  */
 NET_BUF_POOL_FIXED_DEFINE(frag_pool, CONFIG_BT_L2CAP_TX_FRAG_COUNT, FRAG_SIZE,
                           NULL);
-
+#else
+struct net_buf_pool frag_pool;
+#endif
 #endif /* CONFIG_BT_L2CAP_TX_FRAG_COUNT > 0 */
 
 /* How long until we cancel HCI_LE_Create_Connection */
@@ -382,6 +389,19 @@ bool le_check_valid_conn(void) {
 
   return false;
 }
+
+#if defined(BFLB_HOST_ASSISTANT)
+void bt_notify_disconnected(void) {
+  int i;
+
+  for (i = 0; i < ARRAY_SIZE(conns); i++) {
+    if (atomic_get(&conns[i].ref)) {
+      conns[i].err = BT_HCI_ERR_UNSPECIFIED;
+      notify_disconnected(&conns[i]);
+    }
+  }
+}
+#endif //#if defined(BFLB_HOST_ASSISTANT)
 #endif
 
 #if defined(CONFIG_BT_BREDR)
@@ -2443,9 +2463,25 @@ struct bt_conn *bt_conn_lookup_id(u8_t id) {
 
 extern bool queue_inited;
 int bt_conn_init(void) {
-  int err, i;
+#if defined(CONFIG_BT_SMP)
+  int err;
+#endif
+  int i;
 
 #if defined(BFLB_BLE)
+#if defined(BFLB_DYNAMIC_ALLOC_MEM)
+  net_buf_init(&acl_tx_pool, CONFIG_BT_L2CAP_TX_BUF_COUNT,
+               BT_L2CAP_BUF_SIZE(CONFIG_BT_L2CAP_TX_MTU), NULL);
+#if CONFIG_BT_L2CAP_TX_FRAG_COUNT > 0
+  net_buf_init(&frag_pool, CONFIG_BT_L2CAP_TX_FRAG_COUNT, FRAG_SIZE, NULL);
+#endif
+#else // BFLB_DYNAMIC_ALLOC_MEM
+  struct net_buf_pool num_complete_pool;
+  struct net_buf_pool acl_tx_pool;
+#if CONFIG_BT_L2CAP_TX_FRAG_COUNT > 0
+  struct net_buf_pool frag_pool;
+#endif
+#endif // BFLB_DYNAMIC_ALLOC_MEM
   if (queue_inited == false)
     k_lifo_init(&acl_tx_pool.free, CONFIG_BT_L2CAP_TX_BUF_COUNT);
   k_fifo_init(&free_tx, 20);

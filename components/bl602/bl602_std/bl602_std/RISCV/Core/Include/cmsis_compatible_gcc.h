@@ -124,8 +124,8 @@ extern void clic_clear_pending(uint32_t source);
 
 #define NVIC_ClearPendingIRQ clic_clear_pending
 
-//#define __set_MSP(val)                        __ASM volatile ("lw sp,0(%0)"::
-//"r"(val))
+//#define __set_MSP(val)						__ASM volatile ("lw
+//sp,0(%0)":: "r"(val))
 #define __set_MSP(msp) __ASM volatile("add sp, x0, %0" ::"r"(msp))
 
 #endif /* __CMSIS_COMPATIBLE_GCC_H */

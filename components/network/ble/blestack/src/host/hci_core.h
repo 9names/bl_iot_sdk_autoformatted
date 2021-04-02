@@ -59,6 +59,10 @@ enum {
   BT_DEV_ADV_ADDRESS_IS_PUBLIC,
 #endif
 
+#if defined(BFLB_HOST_ASSISTANT)
+  BT_DEV_ASSIST_RUN,
+#endif
+
   /* Total number of flags - must be at the end of the enum */
   BT_DEV_NUM_FLAGS,
 };
@@ -263,8 +267,25 @@ int set_adv_channel_map(u8_t channel);
 int bt_get_local_public_address(bt_addr_le_t *adv_addr);
 int bt_get_local_ramdon_address(bt_addr_le_t *adv_addr);
 int bt_le_set_data_len(struct bt_conn *conn, u16_t tx_octets, u16_t tx_time);
+int hci_le_set_phy(struct bt_conn *conn);
+int hci_le_set_default_phy(struct bt_conn *conn, u8_t default_phy);
 
 #if defined(CONFIG_SET_TX_PWR)
 int bt_set_tx_pwr(int8_t power);
 #endif
+
+#if defined(BFLB_HOST_ASSISTANT)
+struct blhast_cb {
+  void (*le_scan_cb)(const struct bt_le_scan_param *param, bt_le_scan_cb_t cb);
+  void (*le_adv_cb)(const struct bt_le_adv_param *param,
+                    const struct bt_data *ad, size_t ad_len,
+                    const struct bt_data *sd, size_t sd_len);
+};
+int bt_set_flow_control(void);
+int bt_set_event_mask(void);
+int bt_le_set_event_mask(void);
+void bt_hci_reset_complete(struct net_buf *buf);
+void bt_register_host_assist_cb(struct blhast_cb *cb);
+#endif
+
 #endif

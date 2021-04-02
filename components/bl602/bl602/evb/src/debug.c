@@ -35,7 +35,7 @@
 #include <stdio.h>
 #include <string.h>
 
-//#define CHAR_BIT  8
+//#define CHAR_BIT	8
 // FIXME no ugly declare
 extern int bl_uart_data_send(uint8_t id, uint8_t data);
 

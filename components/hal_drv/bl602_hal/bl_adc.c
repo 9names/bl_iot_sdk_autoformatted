@@ -306,8 +306,8 @@ static void adc_data_update(void) {
   return;
 }
 
-// mode = 0; for nomal adc, freq 40HZ ~ 1300HZ
-// mode = 1; for mic use. freq 500HZ ~ 16000HZ
+// mode = 0; for nomal adc, freq 100HZ ~ 2080Hz
+// mode = 1; for mic use. freq 1180Hz ~ 25000Hz
 int bl_adc_freq_init(int mode, uint32_t freq) {
   uint32_t div;
   uint32_t source_freq;
@@ -319,15 +319,21 @@ int bl_adc_freq_init(int mode, uint32_t freq) {
     mode_freq = 1;
   }
 
-  source_freq = ADC_CLOCK_FREQ / (128 * 24 * mode_freq);
+  source_freq = ADC_CLOCK_FREQ / (64 * 20 * mode_freq);
   div = source_freq / freq;
   if (((div + 1) * freq - source_freq) < (source_freq - freq * div)) {
     div = div + 1;
   }
 
+  if (div < 3) {
+    div = 3;
+  }
+
   if (div > 64) {
     div = 64;
   }
+
+  blog_info("ADC freq: %ldHz. \r\n", (int)(source_freq / div));
 
   GLB_Set_ADC_CLK(ENABLE, GLB_ADC_CLK_96M, div - 1);
 
@@ -345,7 +351,7 @@ int bl_adc_init(int mode, int gpio_num) {
 
   adccfg.v18Sel = ADC_V18_SEL_1P82V;
   adccfg.v11Sel = ADC_V11_SEL_1P1V;
-  adccfg.clkDiv = ADC_CLK_DIV_24;
+  adccfg.clkDiv = ADC_CLK_DIV_20;
   adccfg.gain1 = ADC_PGA_GAIN_NONE;
   adccfg.gain2 = ADC_PGA_GAIN_NONE;
   adccfg.chopMode = ADC_CHOP_MOD_ALL_OFF;
@@ -353,7 +359,7 @@ int bl_adc_init(int mode, int gpio_num) {
   adccfg.vcm = ADC_PGA_VCM_1V;
   adccfg.vref = ADC_VREF_3P2V;
   adccfg.inputMode = ADC_INPUT_SINGLE_END;
-  adccfg.resWidth = ADC_DATA_WIDTH_16_WITH_128_AVERAGE;
+  adccfg.resWidth = ADC_DATA_WIDTH_16_WITH_64_AVERAGE;
   adccfg.offsetCalibEn = 0;
   adccfg.offsetCalibVal = 0;
 

@@ -114,8 +114,8 @@ void demand_conf() {
       ((*protp->demand_conf)(pcb));
 /* FIXME: find a way to die() here */
 #if 0
-        if (!((*protp->demand_conf)(pcb)))
-        die(1);
+	    if (!((*protp->demand_conf)(pcb)))
+		die(1);
 #endif
 }
 

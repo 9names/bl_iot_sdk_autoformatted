@@ -161,7 +161,7 @@ extern "C" {
 #endif                    /* IPV6CP_COMP */
 
 /* No compression types yet defined.
- *#define IPV6CP_COMP   0x004f
+ *#define IPV6CP_COMP	0x004f
  */
 typedef struct ipv6cp_options {
   unsigned int neg_ifaceid : 1;  /* Negotiate interface identifier? */

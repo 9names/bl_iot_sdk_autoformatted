@@ -1168,7 +1168,7 @@ void ATTR_TCM_SECTION SF_Ctrl_Set_Clock_Delay(uint8_t delay) {
  *
  */
 #ifndef BL602_USE_HAL_DRIVER
-void __IRQ SF_Ctrl_IRQHandler(void) { /* TODO: Not implemented */ }
+void SF_Ctrl_IRQHandler(void) { /* TODO: Not implemented */ }
 #endif
 
 /*@} end of group SF_CTRL_Public_Functions */

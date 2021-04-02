@@ -133,20 +133,21 @@ void vListInsert(List_t *const pxList, ListItem_t *const pxNewListItem) {
     more tips, and ensure configASSERT() is defined!
     https://www.freertos.org/a00110.html#configASSERT
 
-        1) Stack overflow -
-           see https://www.freertos.org/Stacks-and-stack-overflow-checking.html
-        2) Incorrect interrupt priority assignment, especially on Cortex-M
-           parts where numerically high priority values denote low actual
-           interrupt priorities, which can seem counter intuitive.  See
-           https://www.freertos.org/RTOS-Cortex-M3-M4.html and the definition
-           of configMAX_SYSCALL_INTERRUPT_PRIORITY on
-           https://www.freertos.org/a00110.html
-        3) Calling an API function from within a critical section or when
-           the scheduler is suspended, or calling an API function that does
-           not end in "FromISR" from an interrupt.
-        4) Using a queue or semaphore before it has been initialised or
-           before the scheduler has been started (are interrupts firing
-           before vTaskStartScheduler() has been called?).
+            1) Stack overflow -
+               see
+    https://www.freertos.org/Stacks-and-stack-overflow-checking.html 2)
+    Incorrect interrupt priority assignment, especially on Cortex-M parts where
+    numerically high priority values denote low actual interrupt priorities,
+    which can seem counter intuitive.  See
+               https://www.freertos.org/RTOS-Cortex-M3-M4.html and the
+    definition of configMAX_SYSCALL_INTERRUPT_PRIORITY on
+               https://www.freertos.org/a00110.html
+            3) Calling an API function from within a critical section or when
+               the scheduler is suspended, or calling an API function that does
+               not end in "FromISR" from an interrupt.
+            4) Using a queue or semaphore before it has been initialised or
+               before the scheduler has been started (are interrupts firing
+               before vTaskStartScheduler() has been called?).
     **********************************************************************/
 
     for (

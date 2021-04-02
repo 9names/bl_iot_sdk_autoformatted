@@ -171,8 +171,8 @@ static void wifi_eth_sta_enable(struct netif *netif, uint8_t mac[6]) {
   netif->name[0] = 's';
   netif->name[1] = 't';
   netif->flags |= NETIF_FLAG_LINK_UP | NETIF_FLAG_IGMP;
-  netif_set_default(netif);
-  netif_set_up(netif);
+  netifapi_netif_set_default(netif);
+  netifapi_netif_set_up(netif);
 }
 
 int wifi_mgmr_psk_cal(char *password, char *ssid, int ssid_len, char *output) {
@@ -220,6 +220,10 @@ wifi_interface_t wifi_mgmr_sta_enable(void) {
 int wifi_mgmr_sta_disable(wifi_interface_t *interface) {
   wifi_mgmr_api_idle();
   return 0;
+}
+
+struct netif *wifi_mgmr_sta_netif_get(void) {
+  return &wifiMgmr.wlan_sta.netif;
 }
 
 int wifi_mgmr_sta_mac_set(uint8_t mac[6]) {
@@ -368,13 +372,27 @@ void wifi_mgmr_sta_connect_ind_stat_get(
 }
 
 void wifi_mgmr_sta_ssid_set(char *ssid) {
-  if (strlen(ssid) > 0)
-    memcpy(wifiMgmr.wifi_mgmr_stat_info.ssid, ssid, strlen(ssid));
+  int len = strlen(ssid);
+
+  if (len > 0) {
+    len = len > (sizeof(wifiMgmr.wifi_mgmr_stat_info.ssid) - 1)
+              ? sizeof(wifiMgmr.wifi_mgmr_stat_info.ssid) - 1
+              : len;
+    memcpy(wifiMgmr.wifi_mgmr_stat_info.ssid, ssid, len);
+    wifiMgmr.wifi_mgmr_stat_info.ssid[len] = 0;
+  }
 }
 
 void wifi_mgmr_sta_psk_set(char *psk) {
-  if (strlen(psk) > 0)
-    memcpy(wifiMgmr.wifi_mgmr_stat_info.psk, psk, strlen(psk));
+  int len = strlen(psk);
+
+  if (len > 0) {
+    len = len > (sizeof(wifiMgmr.wifi_mgmr_stat_info.psk) - 1)
+              ? sizeof(wifiMgmr.wifi_mgmr_stat_info.psk) - 1
+              : len;
+    memcpy(wifiMgmr.wifi_mgmr_stat_info.psk, psk, len);
+    wifiMgmr.wifi_mgmr_stat_info.psk[len] = 0;
+  }
 }
 
 static void wifi_eth_ap_enable(struct netif *netif, uint8_t mac[6]) {
@@ -415,13 +433,19 @@ static void wifi_eth_ap_enable(struct netif *netif, uint8_t mac[6]) {
                      &bl606a0_wifi_netif_init, &tcpip_input);
   netif->name[0] = 'a';
   netif->name[1] = 'p';
-  netif_set_default(netif);
-  netif_set_up(netif);
+  netifapi_netif_set_default(netif);
+  netifapi_netif_set_up(netif);
 }
 
 wifi_interface_t wifi_mgmr_ap_enable() {
-  wifiMgmr.wlan_ap.mode = 1; // ap mode
-  wifi_eth_ap_enable(&(wifiMgmr.wlan_ap.netif), wifiMgmr.wlan_ap.mac);
+  // printf("wifiMgmr.wlan_ap.mode = %d \r\n", wifiMgmr.wlan_ap.mode);
+  // TODO should add lock to avoid being called at the same time
+  if (wifiMgmr.inf_ap_enabled) {
+    /*nothing here*/
+  } else {
+    wifiMgmr.wlan_ap.mode = 1; // ap mode
+    wifi_eth_ap_enable(&(wifiMgmr.wlan_ap.netif), wifiMgmr.wlan_ap.mac);
+  }
   return &(wifiMgmr.wlan_ap);
 }
 
@@ -451,8 +475,8 @@ int wifi_mgmr_ap_mac_get(uint8_t mac[6]) {
 
 int wifi_mgmr_ap_ip_get(uint32_t *ip, uint32_t *gw, uint32_t *mask) {
   *ip = netif_ip4_addr(&wifiMgmr.wlan_ap.netif)->addr;
-  *gw = netif_ip4_netmask(&wifiMgmr.wlan_ap.netif)->addr;
-  *mask = netif_ip4_gw(&wifiMgmr.wlan_ap.netif)->addr;
+  *mask = netif_ip4_netmask(&wifiMgmr.wlan_ap.netif)->addr;
+  *gw = netif_ip4_gw(&wifiMgmr.wlan_ap.netif)->addr;
 
   return 0;
 }
@@ -604,14 +628,32 @@ int wifi_mgmr_scan(void *data, scan_complete_cb_t cb) {
   scan_cb = cb;
   scan_data = data;
 
-  wifi_mgmr_api_fw_scan();
+  wifi_mgmr_api_fw_scan(NULL, 0);
 
+  return 0;
+}
+
+int wifi_mgmr_scan_fixed_channels(void *data, scan_complete_cb_t cb,
+                                  uint16_t *channels, uint16_t channel_num) {
+  scan_cb = cb;
+  scan_data = data;
+
+  if (0 != channel_num && NULL == channels) {
+    return -1;
+  }
+
+  wifi_mgmr_api_fw_scan(channels, channel_num);
   return 0;
 }
 
 int wifi_mgmr_cfg_req(uint32_t ops, uint32_t task, uint32_t element,
                       uint32_t type, uint32_t length, uint32_t *buf) {
   return wifi_mgmr_api_cfg_req(ops, task, element, type, length, buf);
+}
+
+int wifi_mgmr_beacon_interval_set(uint16_t beacon_int) {
+  wifiMgmr.ap_bcn_int = beacon_int;
+  return 0;
 }
 
 int wifi_mgmr_scan_filter_hidden_ssid(int filter) {

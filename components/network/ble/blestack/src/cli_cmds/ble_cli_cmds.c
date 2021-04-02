@@ -1,14 +1,19 @@
 #include "ble_cli_cmds.h"
 #include "FreeRTOS.h"
+#include "bl_port.h"
 #include "cli.h"
 #include "conn.h"
+#include "conn_internal.h"
 #include "gatt.h"
 #include "hci_core.h"
 #include "task.h"
 #include <stdlib.h>
-
 #if defined(CONFIG_BLE_MULTI_ADV)
 #include "multi_adv.h"
+#endif
+
+#if defined(CONFIG_HOGP_SERVER)
+#include "hog.h"
 #endif
 
 #define PASSKEY_MAX 0xF423F
@@ -17,6 +22,7 @@
 
 static u8_t selected_id = BT_ID_DEFAULT;
 bool ble_inited = false;
+
 #if defined(CONFIG_BT_CONN)
 struct bt_conn *default_conn = NULL;
 #endif
@@ -25,37 +31,59 @@ struct bt_data ad_discov[2] = {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_NO_BREDR | BT_LE_AD_GENERAL)),
     BT_DATA(BT_DATA_NAME_COMPLETE, CONFIG_BT_DEVICE_NAME, 13),
 };
+#if defined(CONFIG_BLE_MULTI_ADV)
+static int ble_adv_id;
+#endif
 
 #define vOutputString(...) printf(__VA_ARGS__)
 
 static void ble_init(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                      char **argv);
+#if defined(BL702)
+static void ble_set_2M_phy(char *pcWriteBuffer, int xWriteBufferLen, int argc,
+                           char **argv);
+static void ble_set_default_phy(char *pcWriteBuffer, int xWriteBufferLen,
+                                int argc, char **argv);
+#endif
 static void ble_get_device_name(char *pcWriteBuffer, int xWriteBufferLen,
                                 int argc, char **argv);
 static void ble_set_device_name(char *pcWriteBuffer, int xWriteBufferLen,
                                 int argc, char **argv);
+#if defined(CONFIG_BT_OBSERVER)
 static void ble_start_scan(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                            char **argv);
 static void ble_stop_scan(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                           char **argv);
+#endif
 static void ble_read_local_address(char *pcWriteBuffer, int xWriteBufferLen,
                                    int argc, char **argv);
+#if defined(CONFIG_BT_PERIPHERAL)
 static void ble_set_adv_channel(char *pcWriteBuffer, int xWriteBufferLen,
                                 int argc, char **argv);
 static void ble_start_advertise(char *pcWriteBuffer, int xWriteBufferLen,
                                 int argc, char **argv);
 static void ble_stop_advertise(char *pcWriteBuffer, int xWriteBufferLen,
                                int argc, char **argv);
+#endif
+#if defined(CONFIG_BLE_TP_SERVER)
+static void ble_tp_start(char *pcWriteBuffer, int xWriteBufferLen, int argc,
+                         char **argv);
+#endif
+#if defined(CONFIG_BT_CONN)
+#if defined(CONFIG_BT_CENTRAL)
 static void ble_connect(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                         char **argv);
+#endif
 static void ble_disconnect(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                            char **argv);
 static void ble_select_conn(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                             char **argv);
-static void ble_unpair(char *pcWriteBuffer, int xWriteBufferLen, int argc,
-                       char **argv);
 static void ble_conn_update(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                             char **argv);
+static void ble_unpair(char *pcWriteBuffer, int xWriteBufferLen, int argc,
+                       char **argv);
+#endif
+#if defined(CONFIG_BT_SMP)
 static void ble_security(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                          char **argv);
 static void ble_auth(char *pcWriteBuffer, int xWriteBufferLen, int argc,
@@ -68,6 +96,7 @@ static void ble_auth_pairing_confirm(char *pcWriteBuffer, int xWriteBufferLen,
                                      int argc, char **argv);
 static void ble_auth_passkey(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                              char **argv);
+#endif
 static void ble_exchange_mtu(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                              char **argv);
 static void ble_discover(char *pcWriteBuffer, int xWriteBufferLen, int argc,
@@ -98,6 +127,10 @@ static void ble_stop_multi_advertise(char *pcWriteBuffer, int xWriteBufferLen,
 static void ble_set_tx_pwr(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                            char **argv);
 #endif
+#if defined(CONFIG_HOGP_SERVER)
+static void ble_hog_srv_notify(char *pcWriteBuffer, int xWriteBufferLen,
+                               int argc, char **argv);
+#endif
 
 const struct cli_command btStackCmdSet[] STATIC_CLI_CMD_ATTRIBUTE = {
 #if 0
@@ -108,6 +141,11 @@ const struct cli_command btStackCmdSet[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"ble_get_device_name", "\r\nble_get_device_name:[Read local device name]\r\n Parameter[Null]\r\n", ble_get_device_name},
 
     {"ble_set_device_name", "\r\nble_set_device_name:\r\n\[Lenth of name]\r\n\[name]\r\n", ble_set_device_name},
+#if defined(CONFIG_BLE_TP_SERVER)
+
+    {"ble_tp_start", "\r\nble_tp_start:\r\n\
+    [TP test,1:enable, 0:disable]\r\n", ble_tp_start},
+#endif
 
 #if defined(CONFIG_BT_OBSERVER)
     {"ble_start_scan", "\r\nble_start_scan:\r\n\
@@ -125,7 +163,7 @@ const struct cli_command btStackCmdSet[] STATIC_CLI_CMD_ATTRIBUTE = {
     [Mode, 0:discov, 1:non-discov]\r\n\
     [Adv Interval Min,0x0020-4000,e.g.0030]\r\n\
     [Adv Interval Max,0x0020-4000,e.g.0060]\r\n", ble_start_advertise},
-
+     
     {"ble_stop_adv", "\r\nble_stop_adv:[Stop advertising]\r\nParameter[Null]\r\n", ble_stop_advertise},
 
     {"ble_read_local_address", "\r\nble_read_local_address:[Read local address]\r\n", ble_read_local_address},
@@ -137,15 +175,15 @@ const struct cli_command btStackCmdSet[] STATIC_CLI_CMD_ATTRIBUTE = {
      [Address type, 0:ADDR_PUBLIC, 1:ADDR_RAND, 2:ADDR_RPA_OR_PUBLIC, 3:ADDR_RPA_OR_RAND]\r\n\
      [Address value, e.g.112233AABBCC]\r\n", ble_connect},
 #endif // CONFIG_BT_CENTRAL
-
+    
     {"ble_disconnect", "\r\nble_disconnect:[Disconnect remote device]\r\n\
     [Address type, 0:ADDR_PUBLIC, 1:ADDR_RAND, 2:ADDR_RPA_OR_PUBLIC, 3:ADDR_RPA_OR_RAND]\r\n\
     [Address value,e.g.112233AABBCC]\r\n", ble_disconnect},
-
+	
     {"ble_select_conn", "\r\nble_select_conn:[Select a specific connection]\r\n\
     [Address type, 0:ADDR_PUBLIC, 1:ADDR_RAND, 2:ADDR_RPA_OR_PUBLIC, 3:ADDR_RPA_OR_RAND]\r\n\
     [Address value, e.g.112233AABBCC]\r\n", ble_select_conn},
-
+     
     {"ble_unpair", "\r\nble_unpair:[Unpair connection]\r\n\
     [Address type, 0:ADDR_PUBLIC, 1:ADDR_RAND, 2:ADDR_RPA_OR_PUBLIC, 3:ADDR_RPA_OR_RAND]\r\n\
     [Address value, all 0: unpair all connection, otherwise:unpair specific connection]\r\n", ble_unpair},
@@ -223,6 +261,15 @@ const struct cli_command btStackCmdSet[] STATIC_CLI_CMD_ATTRIBUTE = {
 
 #else
     {"ble_init", "", ble_init},
+
+#if defined(CONFIG_BLE_TP_SERVER)
+    {"ble_tp_start", "", ble_tp_start},
+#endif
+
+#if defined(BL702)
+    {"ble_set_2M_Phy", "", ble_set_2M_phy},
+    {"ble_set_default_phy", "", ble_set_default_phy},
+#endif
 #if defined(BFLB_DISABLE_BT)
     {"ble_disable", "", ble_disable},
 #endif
@@ -273,6 +320,9 @@ const struct cli_command btStackCmdSet[] STATIC_CLI_CMD_ATTRIBUTE = {
 #if defined(CONFIG_SET_TX_PWR)
     {"ble_set_tx_pwr", "", ble_set_tx_pwr},
 #endif
+#if defined(CONFIG_HOGP_SERVER)
+    {"ble_hog_srv_notify", "", ble_hog_srv_notify},
+#endif
 #endif
 };
 
@@ -281,6 +331,12 @@ static void connected(struct bt_conn *conn, u8_t err) {
   char addr[BT_ADDR_LE_STR_LEN];
 
   bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+#if defined(CONFIG_BLE_MULTI_ADV)
+  if (ble_adv_id && !bt_le_multi_adv_stop(ble_adv_id)) {
+    ble_adv_id = 0;
+  }
+#endif /* CONFIG_BLE_MULTI_ADV */
 
   if (err) {
     vOutputString("Failed to connect to %s (%u) \r\n", addr, err);
@@ -292,6 +348,16 @@ static void connected(struct bt_conn *conn, u8_t err) {
   if (!default_conn) {
     default_conn = conn;
   }
+
+#if defined(CONFIG_BLE_RECONNECT_TEST)
+  if (conn->role == BT_CONN_ROLE_MASTER) {
+    if (bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN)) {
+      vOutputString("Disconnection fail. \r\n");
+    } else {
+      vOutputString("Disconnect success. \r\n");
+    }
+  }
+#endif
 }
 
 static void disconnected(struct bt_conn *conn, u8_t reason) {
@@ -299,6 +365,16 @@ static void disconnected(struct bt_conn *conn, u8_t reason) {
 
   bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
   vOutputString("Disconnected: %s (reason %u) \r\n", addr, reason);
+
+#if defined(CONFIG_BLE_RECONNECT_TEST)
+  if (conn->role == BT_CONN_ROLE_SLAVE) {
+    if (set_adv_enable(true)) {
+      vOutputString("Restart adv fail. \r\n");
+    } else {
+      vOutputString("Restart adv success. \r\n");
+    }
+  }
+#endif
 
   if (default_conn == conn) {
     default_conn = NULL;
@@ -350,9 +426,6 @@ static void ble_init(char *pcWriteBuffer, int xWriteBufferLen, int argc,
     return;
   }
 
-#if defined(CONFIG_BLE_MULTI_ADV)
-  bt_le_multi_adv_thread_init();
-#endif
 #if defined(CONFIG_BT_CONN)
   default_conn = NULL;
   bt_conn_cb_register(&conn_callbacks);
@@ -360,7 +433,48 @@ static void ble_init(char *pcWriteBuffer, int xWriteBufferLen, int argc,
   ble_inited = true;
   vOutputString("Init successfully \r\n");
 }
+#if defined(BL702)
+static void ble_set_2M_phy(char *pcWriteBuffer, int xWriteBufferLen, int argc,
+                           char **argv) {
+  if (!default_conn) {
+    vOutputString("Not connected \r\n");
+    return;
+  }
+  if (!hci_le_set_phy(default_conn)) {
+    vOutputString("Set ble 2M Phy successfully \r\n");
+  } else {
+    vOutputString("Failed to set ble 2M Phy\r\n");
+  }
+}
 
+static void ble_set_default_phy(char *pcWriteBuffer, int xWriteBufferLen,
+                                int argc, char **argv) {
+  u8_t phy = 0;
+  u8_t default_phy = 0;
+
+  if (!default_conn) {
+    vOutputString("Not connected \r\n");
+    return;
+  }
+  get_uint8_from_string(&argv[1], &phy);
+
+  if (phy == 0) {
+    default_phy = BT_HCI_LE_PHY_PREFER_1M;
+  } else if (phy == 1) {
+    default_phy = BT_HCI_LE_PHY_PREFER_2M;
+  } else if (phy == 2) {
+    default_phy = BT_HCI_LE_PHY_PREFER_CODED;
+  } else {
+    vOutputString("Invaild parameter\r\n");
+  }
+
+  if (!hci_le_set_default_phy(default_conn, default_phy)) {
+    vOutputString("Set ble default(2M) Phy successfully \r\n");
+  } else {
+    vOutputString("Failed to set ble default(2M) Phy\r\n");
+  }
+}
+#endif
 static void ble_get_device_name(char *pcWriteBuffer, int xWriteBufferLen,
                                 int argc, char **argv) {
   const char *device_name = bt_get_name();
@@ -385,6 +499,22 @@ static void ble_set_device_name(char *pcWriteBuffer, int xWriteBufferLen,
     vOutputString("Invaild lenth(%d)\r\n", strlen(argv[1]));
   }
 }
+#if defined(CONFIG_BLE_TP_SERVER)
+static void ble_tp_start(char *pcWriteBuffer, int xWriteBufferLen, int argc,
+                         char **argv) {
+  extern u8_t tp_start;
+
+  get_uint8_from_string(&argv[1], &tp_start);
+  if (tp_start == 1) {
+    vOutputString("Ble Throughput enable\r\n");
+  } else if (tp_start == 0) {
+    vOutputString("Ble Throughput disable\r\n");
+  } else {
+    vOutputString("Invalid parameter\r\n");
+  }
+}
+
+#endif
 
 #if defined(CONFIG_BT_OBSERVER)
 static bool data_cb(struct bt_data *data, void *user_data) {
@@ -496,7 +626,7 @@ static void ble_start_advertise(char *pcWriteBuffer, int xWriteBufferLen,
   struct bt_le_adv_param param;
   const struct bt_data *ad;
   size_t ad_len;
-  int err = 0;
+  int err = -1;
   uint8_t adv_type, mode;
 
   if (argc != 3 && argc != 5) {
@@ -568,9 +698,22 @@ static void ble_start_advertise(char *pcWriteBuffer, int xWriteBufferLen,
   }
 
   if (adv_type == 1 || adv_type == 0) {
+#if defined(CONFIG_BLE_MULTI_ADV)
+    if (ble_adv_id == 0) {
+      err = bt_le_multi_adv_start(&param, ad, ad_len, &ad_discov[0], 1,
+                                  &ble_adv_id);
+    }
+#else
     err = bt_le_adv_start(&param, ad, ad_len, &ad_discov[0], 1);
+#endif /*CONFIG_BLE_MULTI_ADV*/
   } else {
+#if defined(CONFIG_BLE_MULTI_ADV)
+    if (ble_adv_id == 0) {
+      err = bt_le_multi_adv_start(&param, ad, ad_len, NULL, 0, &ble_adv_id);
+    }
+#else
     err = bt_le_adv_start(&param, ad, ad_len, NULL, 0);
+#endif
   }
 
   if (err) {
@@ -582,7 +725,16 @@ static void ble_start_advertise(char *pcWriteBuffer, int xWriteBufferLen,
 
 static void ble_stop_advertise(char *pcWriteBuffer, int xWriteBufferLen,
                                int argc, char **argv) {
+#if defined(CONFIG_BLE_MULTI_ADV)
+  bool err = -1;
+  if (ble_adv_id && !bt_le_multi_adv_stop(ble_adv_id)) {
+    ble_adv_id = 0;
+    err = 0;
+  }
+  if (err) {
+#else
   if (bt_le_adv_stop()) {
+#endif
     vOutputString("Failed to stop advertising\r\n");
   } else {
     vOutputString("Advertising stopped\r\n");
@@ -1222,7 +1374,6 @@ static void ble_read(char *pcWriteBuffer, int xWriteBufferLen, int argc,
 }
 
 static struct bt_gatt_write_params write_params;
-static u8_t gatt_write_buf[CHAR_SIZE_MAX];
 
 static void write_func(struct bt_conn *conn, u8_t err,
                        struct bt_gatt_write_params *params) {
@@ -1235,6 +1386,7 @@ static void ble_write(char *pcWriteBuffer, int xWriteBufferLen, int argc,
                       char **argv) {
   int err;
   uint16_t data_len;
+  u8_t *gatt_write_buf;
 
   if (argc != 5) {
     vOutputString("Number of Parameters is not correct\r\n");
@@ -1254,16 +1406,22 @@ static void ble_write(char *pcWriteBuffer, int xWriteBufferLen, int argc,
   get_uint16_from_string(&argv[1], &write_params.handle);
   get_uint16_from_string(&argv[2], &write_params.offset);
   get_uint16_from_string(&argv[3], &write_params.length);
-  data_len = write_params.length > sizeof(gatt_write_buf)
-                 ? (sizeof(gatt_write_buf))
-                 : (write_params.length);
+  data_len = write_params.length;
+  gatt_write_buf = k_malloc(data_len);
+  if (!gatt_write_buf) {
+    vOutputString("Failed to alloc buffer for the data\r\n");
+    return;
+  }
   get_bytearray_from_string(&argv[4], gatt_write_buf, data_len);
 
-  write_params.data = gatt_write_buf;
+  write_params.data = k_malloc(data_len);
+  ;
   write_params.length = data_len;
   write_params.func = write_func;
 
   err = bt_gatt_write(default_conn, &write_params);
+
+  k_free(gatt_write_buf);
 
   if (err) {
     vOutputString("Write failed (err %d)\r\n", err);
@@ -1278,6 +1436,7 @@ static void ble_write_without_rsp(char *pcWriteBuffer, int xWriteBufferLen,
   int err;
   u16_t len;
   bool sign;
+  u8_t *gatt_write_buf;
 
   if (argc != 5) {
     vOutputString("Number of Parameters is not correct\r\n");
@@ -1292,11 +1451,17 @@ static void ble_write_without_rsp(char *pcWriteBuffer, int xWriteBufferLen,
   get_uint8_from_string(&argv[1], (uint8_t *)&sign);
   get_uint16_from_string(&argv[2], &handle);
   get_uint16_from_string(&argv[3], &len);
-  len = len > sizeof(gatt_write_buf) ? (sizeof(gatt_write_buf)) : (len);
+  gatt_write_buf = k_malloc(len);
+  if (!gatt_write_buf) {
+    vOutputString("Failed to alloc buffer for the data\r\n");
+    return;
+  }
   get_bytearray_from_string(&argv[4], gatt_write_buf, len);
 
   err = bt_gatt_write_without_response(default_conn, handle, gatt_write_buf,
                                        len, sign);
+
+  k_free(gatt_write_buf);
 
   vOutputString("Write Complete (err %d)\r\n", err);
 }
@@ -1306,13 +1471,30 @@ static struct bt_gatt_subscribe_params subscribe_params;
 static u8_t notify_func(struct bt_conn *conn,
                         struct bt_gatt_subscribe_params *params,
                         const void *data, u16_t length) {
+#if defined(CONFIG_BLE_TP_TEST)
+  static u32_t time = 0;
+  static int len = 0;
+#endif
+
   if (!params->value) {
     vOutputString("Unsubscribed\r\n");
     params->value_handle = 0U;
     return BT_GATT_ITER_STOP;
   }
 
-  vOutputString("Notification: data length %u\r\n", length);
+#if defined(CONFIG_BLE_TP_TEST)
+  if (!time) {
+    time = k_now_ms();
+  }
+  len += length;
+  if (k_now_ms() - time >= 1000) {
+    vOutputString("data_len=[%d]\r\n", len);
+    time = k_now_ms();
+    len = 0;
+  }
+#endif
+
+  // vOutputString("Notification: data length %u\r\n", length);
   return BT_GATT_ITER_CONTINUE;
 }
 
@@ -1421,14 +1603,21 @@ static void ble_set_tx_pwr(char *pcWriteBuffer, int xWriteBufferLen, int argc,
   }
 
   get_uint8_from_string(&argv[1], &power);
-
-  if (power > 0x14) {
+#if defined(BL602)
+  if (power > 21) {
     vOutputString(
-        "ble_set_tx_pwr, invalid value, value shall be in [0x%x - 0x%x]\r\n",
-        0x00, 0x14);
+        "ble_set_tx_pwr, invalid value, value shall be in [%d - %d]\r\n", 0,
+        21);
     return;
   }
-
+#elif defined(BL702)
+  if (power > 14) {
+    vOutputString(
+        "ble_set_tx_pwr, invalid value, value shall be in [%d - %d]\r\n", 0,
+        14);
+    return;
+  }
+#endif
   err = bt_set_tx_pwr((int8_t)power);
 
   if (err) {
@@ -1450,6 +1639,30 @@ static void ble_disable(char *pcWriteBuffer, int xWriteBufferLen, int argc,
         "Fail to disable bt, there is existed scan/adv/conn event \r\n");
   } else {
     vOutputString("Disable bt successfully\r\n");
+  }
+}
+#endif
+
+#if defined(CONFIG_HOGP_SERVER)
+static void ble_hog_srv_notify(char *pcWriteBuffer, int xWriteBufferLen,
+                               int argc, char **argv) {
+  uint16_t hid_usage;
+  uint8_t press;
+  int err = 0;
+
+  if (!default_conn) {
+    vOutputString("Not connected\r\n");
+    return;
+  }
+
+  get_uint16_from_string(&argv[1], &hid_usage);
+  get_uint8_from_string(&argv[2], &press);
+
+  err = hog_notify(default_conn, hid_usage, press);
+  if (err) {
+    vOutputString("Failed to send notification\r\n");
+  } else {
+    vOutputString("Notification sent successfully\r\n");
   }
 }
 #endif

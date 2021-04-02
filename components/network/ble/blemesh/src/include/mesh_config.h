@@ -22,7 +22,7 @@
 #endif
 
 #ifndef CONFIG_BT_MESH_CRPL
-#define CONFIG_BT_MESH_CRPL 5
+#define CONFIG_BT_MESH_CRPL 64
 #endif
 
 #ifndef CONFIG_BT_MESH_ADV_BUF_COUNT
@@ -37,6 +37,10 @@
 #define CONFIG_BT_MESH_TX_SEG_MAX 6
 #endif
 
+#ifndef CONFIG_BT_MESH_RX_SEG_MAX
+#define CONFIG_BT_MESH_RX_SEG_MAX CONFIG_BT_MESH_TX_SEG_MAX
+#endif /* CONFIG_BT_MESH_RX_SEG_MAX */
+
 #ifndef CONFIG_BT_MESH_MSG_CACHE_SIZE
 #define CONFIG_BT_MESH_MSG_CACHE_SIZE (2 * CONFIG_BT_MESH_TX_SEG_MAX)
 #endif
@@ -47,6 +51,9 @@
 
 #ifndef CONFIG_BT_MESH_RX_SDU_MAX
 #define CONFIG_BT_MESH_RX_SDU_MAX 108
+#endif
+#ifndef CONFIG_BT_MESH_SEG_BUFS
+#define CONFIG_BT_MESH_SEG_BUFS (12) // TODO
 #endif
 
 #ifndef CONFIG_BT_MESH_RX_SEG_MSG_COUNT
@@ -152,7 +159,7 @@
 #endif
 
 #ifndef CONFIG_BT_MESH_SEQ_STORE_RATE
-#define CONFIG_BT_MESH_SEQ_STORE_RATE 1 // tmp value, need to check
+#define CONFIG_BT_MESH_SEQ_STORE_RATE (100) // tmp value, need to check
 #endif
 
 #ifndef CONFIG_BT_MESH_STORE_TIMEOUT
@@ -165,6 +172,12 @@
 
 #ifndef CONFIG_BT_DEVICE_NAME
 #define CONFIG_BT_DEVICE_NAME "bl_mesh"
+#endif
+
+#ifndef CONFIG_BT_MESH_LOOPBACK_BUFS
+#define CONFIG_BT_MESH_LOOPBACK_BUFS                                           \
+  (CONFIG_BT_MESH_TX_SEG_MAX +                                                 \
+   CONFIG_BT_MESH_RX_SEG_MAX) // temp value, need to check
 #endif
 
 #define BL_COMP_ID 0x07AF

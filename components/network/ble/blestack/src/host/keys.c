@@ -219,6 +219,21 @@ struct bt_keys *bt_keys_find_addr(u8_t id, const bt_addr_le_t *addr) {
   return NULL;
 }
 
+#if defined(CONFIG_BLE_AT_CMD)
+bt_addr_le_t *bt_get_keys_address(u8_t id) {
+  bt_addr_le_t addr;
+
+  memset(&addr, 0, sizeof(bt_addr_le_t));
+  if (id < ARRAY_SIZE(key_pool)) {
+    if (bt_addr_le_cmp(&key_pool[id].addr, &addr)) {
+      return &key_pool[id].addr;
+    }
+  }
+
+  return NULL;
+}
+#endif
+
 void bt_keys_add_type(struct bt_keys *keys, int type) { keys->keys |= type; }
 
 void bt_keys_clear(struct bt_keys *keys) {
@@ -425,8 +440,7 @@ static int keys_commit(void)
 }
 
 // SETTINGS_STATIC_HANDLER_DEFINE(bt_keys, "bt/keys", NULL, keys_set,
-// keys_commit,
-//                 NULL);
+// keys_commit, 			       NULL);
 
 #if defined(BFLB_BLE)
 int bt_keys_load(void) {

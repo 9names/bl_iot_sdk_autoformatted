@@ -53,9 +53,9 @@
 #if 0  /* UNUSED */
 /* Hook for a plugin to validate CHAP challenge */
 int (*chap_verify_hook)(const char *name, const char *ourname, int id,
-            const struct chap_digest_type *digest,
-            const unsigned char *challenge, const unsigned char *response,
-            char *message, int message_space) = NULL;
+			const struct chap_digest_type *digest,
+			const unsigned char *challenge, const unsigned char *response,
+			char *message, int message_space) = NULL;
 #endif /* UNUSED */
 
 #if PPP_OPTIONS
@@ -124,9 +124,9 @@ static void chap_init(ppp_pcb *pcb) {
   LWIP_UNUSED_ARG(pcb);
 
 #if 0 /* Not necessary, everything is cleared in ppp_new() */
-    memset(&pcb->chap_client, 0, sizeof(chap_client_state));
+	memset(&pcb->chap_client, 0, sizeof(chap_client_state));
 #if PPP_SERVER
-    memset(&pcb->chap_server, 0, sizeof(chap_server_state));
+	memset(&pcb->chap_server, 0, sizeof(chap_server_state));
 #endif /* PPP_SERVER */
 #endif /* 0 */
 }
@@ -287,8 +287,8 @@ static void chap_handle_response(ppp_pcb *pcb, int id, unsigned char *pkt,
   struct pbuf *p;
   const char *name = NULL; /* initialized to shut gcc up */
 #if 0                      /* UNUSED */
-    int (*verifier)(const char *, const char *, int, const struct chap_digest_type *,
-        const unsigned char *, const unsigned char *, char *, int);
+	int (*verifier)(const char *, const char *, int, const struct chap_digest_type *,
+		const unsigned char *, const unsigned char *, char *, int);
 #endif                     /* UNUSED */
   char rname[MAXNAMELEN + 1];
   char message[256];
@@ -321,20 +321,20 @@ static void chap_handle_response(ppp_pcb *pcb, int id, unsigned char *pkt,
     }
 
 #if 0  /* UNUSED */
-        if (chap_verify_hook)
-            verifier = chap_verify_hook;
-        else
-            verifier = chap_verify_response;
-        ok = (*verifier)(name, pcb->chap_server.name, id, pcb->chap_server.digest,
-                 pcb->chap_server.challenge + PPP_HDRLEN + CHAP_HDRLEN,
-                 response, pcb->chap_server.message, sizeof(pcb->chap_server.message));
+		if (chap_verify_hook)
+			verifier = chap_verify_hook;
+		else
+			verifier = chap_verify_response;
+		ok = (*verifier)(name, pcb->chap_server.name, id, pcb->chap_server.digest,
+				 pcb->chap_server.challenge + PPP_HDRLEN + CHAP_HDRLEN,
+				 response, pcb->chap_server.message, sizeof(pcb->chap_server.message));
 #endif /* UNUSED */
     ok = chap_verify_response(
         pcb, name, pcb->chap_server.name, id, pcb->chap_server.digest,
         pcb->chap_server.challenge + PPP_HDRLEN + CHAP_HDRLEN, response,
         message, sizeof(message));
 #if 0  /* UNUSED */
-        if (!ok || !auth_number()) {
+		if (!ok || !auth_number()) {
 #endif /* UNUSED */
     if (!ok) {
       pcb->chap_server.flags |= AUTH_FAILED;
@@ -372,20 +372,20 @@ static void chap_handle_response(ppp_pcb *pcb, int id, unsigned char *pkt,
         !(pcb->chap_server.flags & AUTH_FAILED)) {
 
 #if 0  /* UNUSED */
-            /*
-             * Auth is OK, so now we need to check session restrictions
-             * to ensure everything is OK, but only if we used a
-             * plugin, and only if we're configured to check.  This
-             * allows us to do PAM checks on PPP servers that
-             * authenticate against ActiveDirectory, and use AD for
-             * account info (like when using Winbind integrated with
-             * PAM).
-             */
-            if (session_mgmt &&
-            session_check(name, NULL, devnam, NULL) == 0) {
-            pcb->chap_server.flags |= AUTH_FAILED;
-            ppp_warn("Peer %q failed CHAP Session verification", name);
-            }
+		    /*
+		     * Auth is OK, so now we need to check session restrictions
+		     * to ensure everything is OK, but only if we used a
+		     * plugin, and only if we're configured to check.  This
+		     * allows us to do PAM checks on PPP servers that
+		     * authenticate against ActiveDirectory, and use AD for
+		     * account info (like when using Winbind integrated with
+		     * PAM).
+		     */
+		    if (session_mgmt &&
+			session_check(name, NULL, devnam, NULL) == 0) {
+			pcb->chap_server.flags |= AUTH_FAILED;
+			ppp_warn("Peer %q failed CHAP Session verification", name);
+		    }
 #endif /* UNUSED */
     }
     if (pcb->chap_server.flags & AUTH_FAILED) {

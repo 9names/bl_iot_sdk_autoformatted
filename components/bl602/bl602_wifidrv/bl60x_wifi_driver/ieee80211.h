@@ -174,7 +174,7 @@
 #define WLAN_CIPHER_SUITE_USE_GROUP 0x000FAC00
 #define WLAN_CIPHER_SUITE_WEP40 0x000FAC01
 #define WLAN_CIPHER_SUITE_TKIP 0x000FAC02
-/* reserved:                0x000FAC03 */
+/* reserved: 				0x000FAC03 */
 #define WLAN_CIPHER_SUITE_CCMP 0x000FAC04
 #define WLAN_CIPHER_SUITE_WEP104 0x000FAC05
 #define WLAN_CIPHER_SUITE_AES_CMAC 0x000FAC06
@@ -257,9 +257,9 @@ enum ieee80211_reasoncode {
  * struct ieee80211_mcs_info - MCS information
  * @rx_mask: RX mask
  * @rx_highest: highest supported RX rate. If set represents
- *  the highest supported RX data rate in units of 1 Mbps.
- *  If this field is 0 this value should not be used to
- *  consider the highest RX data rate supported.
+ *	the highest supported RX data rate in units of 1 Mbps.
+ *	If this field is 0 this value should not be used to
+ *	consider the highest RX data rate supported.
  * @tx_params: TX parameters
  */
 struct ieee80211_mcs_info {

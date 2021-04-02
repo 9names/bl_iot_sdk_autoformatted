@@ -258,6 +258,7 @@ enum {
    *  take care of keeping advertising enabled even as connections
    *  occur.
    */
+  /* if defined CONFIG_BLE_MULTI_ADV , Only support adv one time.*/
   BT_LE_ADV_OPT_ONE_TIME = BIT(1),
 
   /** Advertise using the identity address as the own address.
@@ -363,10 +364,10 @@ struct bt_le_adv_param {
  *
  *  @return Zero on success or (negative) error code otherwise.
  *  @return -ECONNREFUSED When connectable advertising is requested and there
- *            is already maximum number of connections established.
- *            This error code is only guaranteed when using Zephyr
- *            controller, for other controllers code returned in
- *            this case may be -EIO.
+ *			  is already maximum number of connections established.
+ *			  This error code is only guaranteed when using Zephyr
+ *			  controller, for other controllers code returned in
+ *			  this case may be -EIO.
  */
 int bt_le_adv_start(const struct bt_le_adv_param *param,
                     const struct bt_data *ad, size_t ad_len,
@@ -842,6 +843,10 @@ void bt_foreach_bond(u8_t id,
                                   void *user_data),
                      void *user_data);
 
+/**
+ * write extern inquiry response.
+ */
+int bt_br_write_eir(u8_t rec, u8_t *data);
 /**
  * @}
  */

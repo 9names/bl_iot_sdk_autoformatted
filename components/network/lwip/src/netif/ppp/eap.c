@@ -1387,7 +1387,7 @@ static void eap_request(ppp_pcb *pcb, u_char *inp, int id, int len) {
     }
 
     /* Not so likely to happen. */
-    if (len - vallen >= sizeof(rhostname)) {
+    if (vallen >= len + sizeof(rhostname)) {
       ppp_dbglog("EAP: trimming really long peer name down");
       MEMCPY(rhostname, inp + vallen, sizeof(rhostname) - 1);
       rhostname[sizeof(rhostname) - 1] = '\0';
@@ -1695,12 +1695,6 @@ static void eap_response(ppp_pcb *pcb, u_char *inp, int id, int len) {
   u_char dig[SHA_DIGESTSIZE];
 #endif /* USE_SRP */
 
-  /*
-   * Ignore responses if we're not open
-   */
-  if (esp->es_server.ea_state <= eapClosed)
-    return;
-
   if (pcb->eap.es_server.ea_id != id) {
     ppp_dbglog("EAP: discarding Response %d; expected ID %d", id,
                pcb->eap.es_server.ea_id);
@@ -1808,7 +1802,7 @@ static void eap_response(ppp_pcb *pcb, u_char *inp, int id, int len) {
     }
 
     /* Not so likely to happen. */
-    if (len - vallen >= sizeof(rhostname)) {
+    if (vallen >= len + sizeof(rhostname)) {
       ppp_dbglog("EAP: trimming really long peer name down");
       MEMCPY(rhostname, inp + vallen, sizeof(rhostname) - 1);
       rhostname[sizeof(rhostname) - 1] = '\0';
@@ -2000,12 +1994,6 @@ static void eap_success(ppp_pcb *pcb, u_char *inp, int id, int len) {
  */
 static void eap_failure(ppp_pcb *pcb, u_char *inp, int id, int len) {
   LWIP_UNUSED_ARG(id);
-
-  /*
-   * Ignore responses if we're not open
-   */
-  if (esp->es_client.ea_state <= eapClosed)
-    return;
 
   if (!eap_client_active(pcb)) {
     ppp_dbglog("EAP unexpected failure message in state %s (%d)",

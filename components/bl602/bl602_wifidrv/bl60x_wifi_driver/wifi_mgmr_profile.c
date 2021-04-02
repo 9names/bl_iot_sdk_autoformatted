@@ -147,7 +147,7 @@ wifi_mgmr_profile_t *__lookup_profile(wifi_mgmr_t *mgmr, int index) {
 int wifi_mgmr_profile_autoreconnect_is_enabled(wifi_mgmr_t *mgmr, int index) {
 #if 0
     wifi_mgmr_profile_t *profile;
-
+    
     profile = __lookup_profile(mgmr, index);
     if (NULL == profile) {
         return -1;

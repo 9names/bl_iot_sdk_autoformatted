@@ -32,16 +32,11 @@ struct bt_mesh_adv {
 
   u8_t type : 2, busy : 1;
   u8_t xmit;
-
-  union {
-    /* Address, used e.g. for Friend Queue messages */
-    u16_t addr;
-
-    /* For transport layer segment sending */
-    struct {
-      u8_t attempts;
-    } seg;
-  };
+#if defined(CONFIG_BLE_MULTI_ADV)
+  struct k_delayed_work d_work;
+  int adv_id;
+  struct net_buf *buf;
+#endif /* CONFIG_BLE_MULTI_ADV */
 };
 
 typedef struct bt_mesh_adv *(*bt_mesh_adv_alloc_t)(int id);

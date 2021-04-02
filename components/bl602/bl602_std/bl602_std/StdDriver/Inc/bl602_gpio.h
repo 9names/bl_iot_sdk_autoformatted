@@ -70,6 +70,8 @@ typedef enum {
   ((uint32_t)0x00000001U) /*!< Output Push Pull Mode                 */
 #define GPIO_MODE_AF                                                           \
   ((uint32_t)0x00000002U) /*!< Alternate function                    */
+#define GPIO_MODE_ANALOG                                                       \
+  ((uint32_t)0x00000003U) /*!< Analog function                       */
 #define GPIO_PULL_UP                                                           \
   ((uint32_t)0x00000000U) /*!< GPIO pull up                          */
 #define GPIO_PULL_DOWN                                                         \

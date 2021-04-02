@@ -21,5 +21,6 @@
 #include <include/health_srv.h>
 #include <include/main.h>
 #include <include/proxy.h>
+#include <include/vendor_defs.h> // Added by bouffalo
 
 #endif /* ZEPHYR_INCLUDE_BLUETOOTH_MESH_H_ */

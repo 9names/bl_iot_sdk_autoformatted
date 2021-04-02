@@ -216,7 +216,7 @@ static const fsm_callbacks ipv6cp_callbacks = {
  */
 static int setifaceid(char **arg));
 static void printifaceid(option_t *,
-                  void (*)(void *, char *, ...), void *));
+			      void (*)(void *, char *, ...), void *));
 
 static option_t ipv6cp_option_list[] = {
     {"ipv6", o_special, (void *)setifaceid,
@@ -499,7 +499,6 @@ static void printifaceid(opt, printer, arg) option_t *opt;
       wo->req_ifaceid = wo->neg_ifaceid && ao->neg_ifaceid;
 
       if (!wo->opt_local) {
-        wo->accept_local = 1;
         eui64_magic_nz(wo->ourid);
       }
 
@@ -573,8 +572,8 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      * ipv6cp_ackci - Ack our CIs.
      *
      * Returns:
-     *  0 - Ack was bad.
-     *  1 - Ack was good.
+     *	0 - Ack was bad.
+     *	1 - Ack was good.
      */
     static int ipv6cp_ackci(fsm *f, u_char *p, int len) {
       ppp_pcb *pcb = f->pcb;
@@ -645,8 +644,8 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      * or if IPV6CP is in the OPENED state.
      *
      * Returns:
-     *  0 - Nak was bad.
-     *  1 - Nak was good.
+     *	0 - Nak was bad.
+     *	1 - Nak was good.
      */
     static int ipv6cp_nakci(fsm *f, u_char *p, int len, int treat_as_reject) {
       ppp_pcb *pcb = f->pcb;
@@ -1216,11 +1215,11 @@ static void printifaceid(opt, printer, arg) option_t *opt;
 #if 0  /* UNUSED */
     /*
      * Execute the ipv6-up script, like this:
-     *  /etc/ppp/ipv6-up interface tty speed local-LL remote-LL
+     *	/etc/ppp/ipv6-up interface tty speed local-LL remote-LL
      */
     if (ipv6cp_script_state == s_down && ipv6cp_script_pid == 0) {
-    ipv6cp_script_state = s_up;
-    ipv6cp_script(_PATH_IPV6UP);
+	ipv6cp_script_state = s_up;
+	ipv6cp_script(_PATH_IPV6UP);
     }
 #endif /* UNUSED */
     }
@@ -1268,8 +1267,8 @@ static void printifaceid(opt, printer, arg) option_t *opt;
 #if 0  /* UNUSED */
     /* Execute the ipv6-down script */
     if (ipv6cp_script_state == s_up && ipv6cp_script_pid == 0) {
-    ipv6cp_script_state = s_down;
-    ipv6cp_script(_PATH_IPV6DOWN);
+	ipv6cp_script_state = s_down;
+	ipv6cp_script(_PATH_IPV6DOWN);
     }
 #endif /* UNUSED */
     }
@@ -1299,17 +1298,17 @@ ipv6cp_script_done(arg)
     ipv6cp_script_pid = 0;
     switch (ipv6cp_script_state) {
     case s_up:
-    if (ipv6cp_fsm[0].state != PPP_FSM_OPENED) {
-        ipv6cp_script_state = s_down;
-        ipv6cp_script(_PATH_IPV6DOWN);
-    }
-    break;
+	if (ipv6cp_fsm[0].state != PPP_FSM_OPENED) {
+	    ipv6cp_script_state = s_down;
+	    ipv6cp_script(_PATH_IPV6DOWN);
+	}
+	break;
     case s_down:
-    if (ipv6cp_fsm[0].state == PPP_FSM_OPENED) {
-        ipv6cp_script_state = s_up;
-        ipv6cp_script(_PATH_IPV6UP);
-    }
-    break;
+	if (ipv6cp_fsm[0].state == PPP_FSM_OPENED) {
+	    ipv6cp_script_state = s_up;
+	    ipv6cp_script(_PATH_IPV6UP);
+	}
+	break;
     }
 }
 
@@ -1339,7 +1338,7 @@ ipv6cp_script(script)
     argv[7] = NULL;
 
     ipv6cp_script_pid = run_program(script, argv, 0, ipv6cp_script_done,
-                    NULL, 0);
+				    NULL, 0);
 }
 #endif /* UNUSED */
 

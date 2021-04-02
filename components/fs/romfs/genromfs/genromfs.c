@@ -60,7 +60,7 @@
  * # genromfs -d rescue -f testimg.rom -V "Install disk"
  *
  * Other options:
- * -a N  force all regular file data to be aligned on N bytes boundary
+ * -a N	 force all regular file data to be aligned on N bytes boundary
  * -A N,/name force named file(s) (shell globbing applied against the filenames)
  *       to be aligned on N bytes boundary
  * In both cases, N must be a power of two.
@@ -301,11 +301,11 @@ void dumpri(struct romfh *ri, struct filenode *n, FILE *f) {
     fixsum(ri, len);
   dumpdata(bigbuf, len, f);
 #if 0
-    fprintf(stderr, "RI: [at %06x] %08lx, %08lx, %08lx, %08lx [%s]\n",
-        n->offset,
-        ntohl(ri->nextfh), ntohl(ri->spec),
-        ntohl(ri->size), ntohl(ri->checksum),
-        n->name);
+	fprintf(stderr, "RI: [at %06x] %08lx, %08lx, %08lx, %08lx [%s]\n",
+		n->offset,
+		ntohl(ri->nextfh), ntohl(ri->spec),
+		ntohl(ri->size), ntohl(ri->checksum),
+		n->name);
 #endif
 }
 

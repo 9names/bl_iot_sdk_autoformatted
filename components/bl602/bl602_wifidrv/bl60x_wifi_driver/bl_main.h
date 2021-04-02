@@ -58,7 +58,7 @@ int bl_main_connect(const uint8_t *ssid, int ssid_len, const uint8_t *psk,
                     const uint8_t *mac, const uint8_t band,
                     const uint16_t freq);
 int bl_main_apm_start(char *ssid, char *password, int channel,
-                      uint8_t vif_index, uint8_t hidden_ssid);
+                      uint8_t vif_index, uint8_t hidden_ssid, uint16_t bcn_int);
 int bl_main_apm_stop(uint8_t vif_index);
 int bl_main_apm_sta_cnt_get(uint8_t *sta_cnt);
 int bl_main_apm_sta_info_get(struct wifi_apm_sta_info *apm_sta_info,
@@ -68,10 +68,11 @@ int bl_main_apm_remove_all_sta();
 int bl_main_conf_max_sta(uint8_t max_sta_supported);
 int bl_main_cfg_task_req(uint32_t ops, uint32_t task, uint32_t element,
                          uint32_t type, void *arg1, void *arg2);
-int bl_main_scan(void);
+int bl_main_scan(uint16_t *fixed_channels, uint16_t channel_num);
 int bl_main_raw_send(uint8_t *pkt, int len);
 int bl_main_set_country_code(char *country_code);
 int bl_main_get_channel_nums();
+int bl_main_beacon_interval_set(uint16_t beacon_int);
 
 struct wifi_event_sm_connect_ind {
   uint16_t status_code;
